@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-
-
 /**
  * Tests our own ZIP file implementation.
  *
@@ -18,16 +16,11 @@ class XpZipFileTest extends ZipFileVendorTest {
     return 'xp';
   }
 
-  /**
-   * Tests reading an zipfile with one entry called "äöü.txt" in its 
-   * root directory, using utf-8 names
-   *
-   */
   #[@test]
   public function unicodeZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor, 'unicode'));
     $this->assertEquals(1, sizeof($entries));
-    $this->assertEquals('äöü.txt', $entries[0]->getName());
+    $this->assertEquals(iconv('utf-8', \xp::ENCODING, 'Ã¤Ã¶Ã¼.txt'), $entries[0]->getName());
     $this->assertEquals(0, $entries[0]->getSize());
     $this->assertFalse($entries[0]->isDirectory());
   }
@@ -52,10 +45,6 @@ class XpZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  /**
-   * Tests password protection
-   *
-   */
   #[@test]
   public function zipCryptoPasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor, 'zip-crypto'));

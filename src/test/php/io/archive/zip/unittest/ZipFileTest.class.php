@@ -4,24 +4,14 @@ use unittest\TestCase;
 use io\archive\zip\ZipFile;
 use lang\Runtime;
 
-
 /**
  * Base class for testing zip files
  *
  * @see   xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
  * @see   xp://net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
  */
+#[@action(new \unittest\actions\ExtensionAvailable('zlib'))]
 abstract class ZipFileTest extends TestCase {
-
-  /**
-   * Sets up test case
-   *
-   */
-  public function setUp() {
-    if (!Runtime::getInstance()->extensionAvailable('zlib')) {
-      throw new \unittest\PrerequisitesNotMetError('ZLib support not available', null, array('ext/zlib'));
-    }
-  }
 
   /**
    * Returns an archive reader for a given zip file

@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest;
 
-
-
 /**
  * Base class for testing zip file contents
  *
@@ -24,28 +22,16 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
     return $entries;
   }
 
-  /**
-   * Tests iterator workings
-   *
-   */
   #[@test]
   public function emptyFilesHasNoEntries() {
     $this->assertFalse($this->archiveReaderFor('fixtures', 'nofiles')->iterator()->hasNext());
   }
 
-  /**
-   * Tests iterator workings
-   *
-   */
   #[@test, @expect('util.NoSuchElementException')]
   public function iterationOverEndForEmpty() {
     $this->archiveReaderFor('fixtures', 'nofiles')->iterator()->next();
   }
 
-  /**
-   * Tests iterator workings
-   *
-   */
   #[@test]
   public function iterationOverEnd() {
     $it= $this->archiveReaderFor('fixtures', 'onefile')->iterator();
@@ -57,10 +43,6 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
     $this->assertFalse($it->hasNext());
   }
 
-  /**
-   * Tests iterator workings
-   *
-   */
   #[@test]
   public function iterator() {
     $it= $this->archiveReaderFor('fixtures', 'onefile')->iterator();

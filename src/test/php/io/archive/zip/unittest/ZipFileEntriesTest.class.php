@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest;
 
-
-
 /**
  * Base class for testing zip file contents
  *

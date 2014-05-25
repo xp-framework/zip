@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest;
 
-
-
 /**
  * Tests ZipArchiveReader class
  *
@@ -9,10 +7,6 @@
  */
 class ZipArchiveReaderTest extends ZipFileTest {
 
-  /**
-   * Tests close()
-   *
-   */
   #[@test]
   public function close() {
     $stream= newinstance('io.streams.InputStream', array(), '{

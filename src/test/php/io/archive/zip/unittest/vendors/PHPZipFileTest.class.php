@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-
-
 /**
  * Tests ZIP file implementation with ZIP files created by
  * PHP's ZipArchive class

@@ -1,18 +1,13 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-use net\xp_framework\unittest\io\archive\ZipFileTest;
-
-
 /**
- * TestCase
- *
+ * Abstract base class
  */
-abstract class ZipFileVendorTest extends ZipFileTest {
+abstract class ZipFileVendorTest extends \io\archive\zip\unittest\ZipFileTest {
   protected $vendor= null;
 
   /**
    * Sets up test case
-   *
    */
   public function setUp() {
     parent::setUp();
@@ -34,20 +29,11 @@ abstract class ZipFileVendorTest extends ZipFileTest {
    */
   protected abstract function vendorName();
   
-  /**
-   * Tests reading an empty zipfile
-   *
-   */
   #[@test]
   public function emptyZipFile() {
     $this->assertEquals(array(), $this->entriesIn($this->archiveReaderFor($this->vendor, 'empty')));
   }
 
-  /**
-   * Tests reading a zipfile with one entry called "hello.txt" in its 
-   * root directory.
-   *
-   */
   #[@test]
   public function helloZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor, 'hello'));
@@ -57,16 +43,11 @@ abstract class ZipFileVendorTest extends ZipFileTest {
     $this->assertFalse($entries[0]->isDirectory());
   }
 
-  /**
-   * Tests reading an zipfile with one entry called "äöü.txt" in its 
-   * root directory.
-   *
-   */
   #[@test]
   public function umlautZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor, 'umlaut'));
     $this->assertEquals(1, sizeof($entries));
-    $this->assertEquals('äöü.txt', $entries[0]->getName());
+    $this->assertEquals(iconv('utf-8', \xp::ENCODING, 'Ã¤Ã¶Ã¼.txt'), $entries[0]->getName());
     $this->assertEquals(0, $entries[0]->getSize());
     $this->assertFalse($entries[0]->isDirectory());
   }

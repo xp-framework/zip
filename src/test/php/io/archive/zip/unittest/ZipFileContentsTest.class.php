@@ -2,7 +2,6 @@
 
 use io\streams\Streams;
 
-
 /**
  * Base class for testing zip file contents
  *
@@ -33,10 +32,6 @@ abstract class ZipFileContentsTest extends ZipFileTest {
    */
   protected abstract function entriesWithContentIn(\io\archive\zip\ZipArchiveReader $zip);
 
-  /**
-   * Tests reading an empty zip file
-   *
-   */
   #[@test]
   public function nofiles() {
     $this->assertEquals(
@@ -45,11 +40,6 @@ abstract class ZipFileContentsTest extends ZipFileTest {
     );
   }
 
-  /**
-   * Tests reading a zipfile with one entry called "hello.txt" in its 
-   * root directory.
-   *
-   */
   #[@test]
   public function onefile() {
     $this->assertEquals(
@@ -58,11 +48,6 @@ abstract class ZipFileContentsTest extends ZipFileTest {
     );
   }
 
-  /**
-   * Tests reading a zipfile with one entry called "dir" in its 
-   * root directory.
-   *
-   */
   #[@test]
   public function onedir() {
     $this->assertEquals(
@@ -71,10 +56,6 @@ abstract class ZipFileContentsTest extends ZipFileTest {
     );
   }
 
-  /**
-   * Tests reading a zipfile with two files inide its root directory
-   *
-   */
   #[@test]
   public function twofiles() {
     $this->assertEquals(
@@ -83,10 +64,6 @@ abstract class ZipFileContentsTest extends ZipFileTest {
     );
   }
 
-  /**
-   * Tests reading file contents after iterating over the index
-   *
-   */
   #[@test]
   public function loadContentAfterIteration() {
     $entries= $this->entriesIn($this->archiveReaderFor('fixtures', 'twofiles'));
