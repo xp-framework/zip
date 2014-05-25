@@ -136,9 +136,11 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
    */
   protected function decodeName($name, $charsets) {
     \xp::gc(__FILE__);
-    foreach ($charsets as $charset) {
-      $decoded= iconv($charset, \xp::ENCODING, $name);
-      if (!\xp::errorAt(__FILE__, __LINE__ - 1)) return $decoded;
+    foreach ($charsets as $charset => $target) {
+      $decoded= iconv($charset, $target, $name);
+      if (!\xp::errorAt(__FILE__, __LINE__ - 1)) {
+        return $target === \xp::ENCODING ? $decoded : iconv($target, \xp::ENCODING, $decoded);
+      }
       \xp::gc(__FILE__);   // Clean up and try next charset
     }
     return $name;
@@ -170,8 +172,8 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
           // it as-is. Do this as certain vendors (Java e.g.) always use utf-8 
           // but do not indicate this via EFS.
           $decoded= $this->decodeName($name, $header['flags'] & 2048
-            ? array('utf-8')
-            : array('utf-8', 'cp437')
+            ? array('utf-8' => \xp::ENCODING)
+            : array('utf-8' => \xp::ENCODING, 'cp437' => 'iso-8859-1', 'cp1252' => \xp::ENCODING)
           );
         }
         $extra= $this->streamRead($header['extralen']);
