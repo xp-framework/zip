@@ -116,9 +116,29 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
   /**
    * Returns an input stream for reading from this entry
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    */
   public function getInputStream() {
+    return $this->in();
+  }
+
+  /**
+   * Returns an output stream for writing to this entry
+   *
+   * @deprecated Use out() instead
+   * @return  io.streams.OutputStream
+   */
+  public function getOutputStream() {
+    return $this->out();
+  }
+
+  /**
+   * Returns an input stream for reading from this entry
+   *
+   * @return  io.streams.InputStream
+   */
+  public function in() {
     return $this->compression[0]->getDecompressionStream($this->is);
   }
 
@@ -127,10 +147,10 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
    *
    * @return  io.streams.OutputStream
    */
-  public function getOutputStream() {
+  public function out() {
     return $this->os->withCompression($this->compression[0],  $this->compression[1]);
   }
-  
+
   /**
    * Creates a string representation of this object
    *

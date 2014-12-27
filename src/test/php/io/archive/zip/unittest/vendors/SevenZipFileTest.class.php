@@ -24,7 +24,7 @@ class SevenZipFileTest extends ZipFileVendorTest {
     $this->assertEquals('compression.txt', $entry->getName());
     $this->assertEquals(1660, $entry->getSize());
     
-    with ($is= $entry->getInputStream()); {
+    with ($is= $entry->in()); {
       $this->assertEquals('This file is to be compressed', (string)$is->read(29));
       $is->read(1630);
       $this->assertEquals('.', (string)$is->read(1));
@@ -67,12 +67,12 @@ class SevenZipFileTest extends ZipFileVendorTest {
       $entry= $it->next();
       $this->assertEquals('password.txt', $entry->getName());
       $this->assertEquals(15, $entry->getSize());
-      $this->assertEquals('Secret contents', (string)Streams::readAll($entry->getInputStream()));
+      $this->assertEquals('Secret contents', (string)Streams::readAll($entry->in()));
 
       $entry= $it->next();
       $this->assertEquals('very.txt', $entry->getName());
       $this->assertEquals(20, $entry->getSize());
-      $this->assertEquals('Very secret contents', (string)Streams::readAll($entry->getInputStream()));
+      $this->assertEquals('Very secret contents', (string)Streams::readAll($entry->in()));
     }
   }
 

@@ -24,7 +24,7 @@ abstract class ZipFileTest extends \unittest\TestCase {
     if ($entry->isDirectory()) {
       return null;
     } else {
-      return (string)Streams::readAll($entry->getInputStream());
+      return (string)Streams::readAll($entry->in());
     }
   }
 

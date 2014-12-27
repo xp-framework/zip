@@ -35,7 +35,7 @@ class ZipArchiveWriterTest extends ZipFileTest {
     $out= new MemoryOutputStream();
 
     $fixture= ZipFile::create($out);
-    $fixture->addFile(new ZipFileEntry('test.txt'))->getOutputStream()->write('File contents');
+    $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $fixture->close();
 
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
@@ -58,8 +58,8 @@ class ZipArchiveWriterTest extends ZipFileTest {
 
     $fixture= ZipFile::create($out);
     $dir= $fixture->addDir(new ZipDirEntry('test/'));
-    $fixture->addFile(new ZipFileEntry($dir, '1.txt'))->getOutputStream()->write('File #1');
-    $fixture->addFile(new ZipFileEntry($dir, '2.txt'))->getOutputStream()->write('File #2');
+    $fixture->addFile(new ZipFileEntry($dir, '1.txt'))->out()->write('File #1');
+    $fixture->addFile(new ZipFileEntry($dir, '2.txt'))->out()->write('File #2');
     $fixture->close();
 
     $this->assertEquals(
@@ -73,7 +73,7 @@ class ZipArchiveWriterTest extends ZipFileTest {
     $out= new MemoryOutputStream();
 
     $fixture= ZipFile::create($out)->usingPassword('secret');
-    $fixture->addFile(new ZipFileEntry('test.txt'))->getOutputStream()->write('File contents');
+    $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $fixture->close();
 
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
@@ -96,7 +96,7 @@ class ZipArchiveWriterTest extends ZipFileTest {
     $out= new MemoryOutputStream();
 
     $fixture= ZipFile::create($out)->usingUnicodeNames();
-    $fixture->addFile(new ZipFileEntry('関連事業調査.txt'))->getOutputStream()->write('File contents');
+    $fixture->addFile(new ZipFileEntry('関連事業調査.txt'))->out()->write('File contents');
     $fixture->close();
 
     $this->assertEquals(['関連事業調査.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
