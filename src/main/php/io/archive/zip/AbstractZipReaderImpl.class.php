@@ -37,8 +37,12 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
    * @param   string password
    */
   public function setPassword($password) {
-    $this->password= new ZipCipher();
-    $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+    if (null === $password) {
+      $this->password= null;
+    } else {
+      $this->password= new ZipCipher();
+      $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+    }
   }
 
   /**

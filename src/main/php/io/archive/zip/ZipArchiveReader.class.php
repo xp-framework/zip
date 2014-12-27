@@ -51,9 +51,7 @@ class ZipArchiveReader extends \lang\Object {
    * @return  io.archive.zip.ZipArchiveReader this
    */
   public function usingPassword($password) {
-    if (null !== $password) {
-      $this->impl->setPassword($password);
-    }
+    $this->impl->setPassword($password);
     return $this;
   }
 
