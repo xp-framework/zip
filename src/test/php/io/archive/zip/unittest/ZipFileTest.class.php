@@ -4,7 +4,7 @@ use io\archive\zip\ZipFile;
 use io\streams\MemoryOutputStream;
 use io\streams\MemoryInputStream;
 
-class ZipFileFactoryTest extends AbstractZipFileTest {
+class ZipFileTest extends AbstractZipFileTest {
 
   #[@test]
   public function zipfile_create() {

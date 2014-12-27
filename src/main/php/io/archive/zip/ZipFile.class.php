@@ -8,27 +8,27 @@ use io\streams\InputStream;
  *
  * Usage (creating a zip file)
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * <code>
- *   $z= ZipFile::create(new FileOutputStream(new File('dist.zip')));
- *   $z->addDir(new ZipDirEntry('META-INF'));
- *   $e= $z->addFile(new ZipFileEntry('META-INF/version.txt'));
- *   $e->getOutputStream()->write($contents);
- *   $z->close();
- * </code>
+ * ```php
+ * $z= ZipFile::create(new FileOutputStream(new File('dist.zip')));
+ * $dir= $z->add(new ZipDirEntry('META-INF'));
+ * $file= $z->addFile(new ZipFileEntry($dir, 'version.txt'));
+ * $file->out()->write($contents);
+ * $z->close();
+ * ```
  *
  * Usage (reading a zip file)
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~
- * <code>
- *   $z= ZipFile::open(new FileInputStream(new File('dist.zip')));
- *   foreach ($z->entries() as $entry) {
- *     if ($entry->isDirectory()) {
- *       // Create dir
- *     } else {
- *       // Extract
- *       Streams::readAll($entry->getInputStream());
- *     }
+ * ```php
+ * $z= ZipFile::open(new FileInputStream(new File('dist.zip')));
+ * foreach ($z->entries() as $entry) {
+ *   if ($entry->isDirectory()) {
+ *     // Create dir
+ *   } else {
+ *     // Extract
+ *     Streams::readAll($entry->in());
  *   }
- * </code>
+ * }
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.io.archive.vendors.InfoZipZipFileTest
  * @test     xp://net.xp_framework.unittest.io.archive.vendors.JarFileTest
@@ -40,6 +40,7 @@ use io\streams\InputStream;
  * @test     xp://net.xp_framework.unittest.io.archive.vendors.WindowsZipFileTest
  * @test     xp://net.xp_framework.unittest.io.archive.vendors.XpZipFileTest
  * @test     xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
+ * @test     xp://net.xp_framework.unittest.io.archive.ZipFileTest
  * @see      http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  */
 abstract class ZipFile extends \lang\Object {
