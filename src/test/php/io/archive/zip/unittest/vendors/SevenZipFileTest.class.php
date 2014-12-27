@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
-
+use unittest\actions\ExtensionAvailable;
 
 /**
  * Tests 7-ZIP archives
@@ -9,16 +9,10 @@ use io\streams\Streams;
  * @see   http://www.7-zip.org/
  */
 class SevenZipFileTest extends ZipFileVendorTest {
-  
-  /**
-   * Returns vendor name
-   *
-   * @return  string
-   */
-  protected function vendorName() {
-    return '7zip';
-  }
-  
+
+  /** @return string */
+  protected function vendorName() { return '7zip'; }
+
   /**
    * Assertion helper
    *
@@ -37,46 +31,26 @@ class SevenZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  /**
-   * Tests deflate algorithm
-   *
-   */
-  #[@test, @ext('zlib')]
+  #[@test, @action(new ExtensionAvailable('zlib'))]
   public function deflate() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor, 'deflate'));
   }
 
-  /**
-   * Tests bzip2 algorithm
-   *
-   */
-  #[@test, @ext('bz2')]
+  #[@test, @action(new ExtensionAvailable('bz2'))]
   public function bzip2() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor, 'bzip2'));
   }
 
-  /**
-   * Tests deflate64 algorithm
-   *
-   */
   #[@test, @ignore('Not yet supported')]
   public function deflate64() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor, 'deflate64'));
   }
 
-  /**
-   * Tests lzma algorithm
-   *
-   */
   #[@test, @ignore('Not yet supported')]
   public function lzma() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor, 'lzma'));
   }
 
-  /**
-   * Tests ppmd algorithm
-   *
-   */
   #[@test, @ignore('Not yet supported')]
   public function ppmd() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor, 'ppmd'));
@@ -102,19 +76,11 @@ class SevenZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  /**
-   * Tests password protection
-   *
-   */
   #[@test]
   public function zipCryptoPasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor, 'zip-crypto'));
   }
 
-  /**
-   * Tests password protection
-   *
-   */
   #[@test, @ignore('Not yet supported')]
   public function aes256PasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor, 'aes-256'));

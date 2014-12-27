@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-
-
 /**
  * TestCase
  *
@@ -10,18 +8,9 @@
  */
 class JarFileTest extends ZipFileVendorTest {
 
-  /**
-   * Test
-   *
-   */
-  public function vendorName() {
-    return 'jar';
-  }
-  
-  /**
-   * Tests reading an empty zipfile
-   *
-   */
+  /** @return string */
+  protected function vendorName() { return 'jar'; }
+
   #[@test, @ignore('Cannot create empty zipfiles with `jar`')]
   public function emptyZipFile() {
     parent::emptyZipFile();

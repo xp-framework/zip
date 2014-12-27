@@ -1,20 +1,16 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
+use io\streams\Streams;
+
 /**
  * Tests our own ZIP file implementation.
  *
  * @see   xp://io.archive.zip.ZipFile
  */
 class XpZipFileTest extends ZipFileVendorTest {
-  
-  /**
-   * Returns vendor name
-   *
-   * @return  string
-   */
-  protected function vendorName() {
-    return 'xp';
-  }
+
+  /** @return string */
+  protected function vendorName() { return 'xp'; }
 
   #[@test]
   public function unicodeZip() {
@@ -36,12 +32,12 @@ class XpZipFileTest extends ZipFileVendorTest {
       $entry= $it->next();
       $this->assertEquals('password.txt', $entry->getName());
       $this->assertEquals(15, $entry->getSize());
-      $this->assertEquals('Secret contents', (string)\io\streams\Streams::readAll($entry->getInputStream()));
+      $this->assertEquals('Secret contents', (string)Streams::readAll($entry->getInputStream()));
 
       $entry= $it->next();
       $this->assertEquals('very.txt', $entry->getName());
       $this->assertEquals(20, $entry->getSize());
-      $this->assertEquals('Very secret contents', (string)\io\streams\Streams::readAll($entry->getInputStream()));
+      $this->assertEquals('Very secret contents', (string)Streams::readAll($entry->getInputStream()));
     }
   }
 
