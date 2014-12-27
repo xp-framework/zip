@@ -137,6 +137,21 @@ class ZipArchiveWriter extends \lang\Object {
     $entry->os= $this->out;
     return $entry;
   }
+
+  /**
+   * Adds an entry
+   *
+   * @param   io.archive.zip.ZipEntry entry
+   * @return  io.archive.zip.ZipEntry entry
+   * @throws  lang.IllegalArgumentException in case the filename is longer than 65535 bytes
+   */
+  public function add(ZipEntry $entry) {
+    if ($entry->isDirectory()) {
+      return $this->addDir($entry);
+    } else {
+      return $this->addFile($entry);
+    }
+  }
   
   /**
    * Returns a time in the format used by MS-DOS.

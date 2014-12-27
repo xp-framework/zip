@@ -31,7 +31,7 @@ class ZipArchiveWriterTest extends ZipFileTest {
   }
 
   #[@test]
-  public function adding_a_file() {
+  public function adding_a_file_via_addFile() {
     $out= new MemoryOutputStream();
 
     $fixture= ZipFile::create($out);
@@ -42,11 +42,33 @@ class ZipArchiveWriterTest extends ZipFileTest {
   }
 
   #[@test]
-  public function adding_a_dir() {
+  public function adding_a_file_via_add() {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out);
+    $fixture->add(new ZipFileEntry('test.txt'))->out()->write('File contents');
+    $fixture->close();
+
+    $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
+  }
+
+  #[@test]
+  public function adding_a_dir_via_addDir() {
     $out= new MemoryOutputStream();
 
     $fixture= ZipFile::create($out);
     $fixture->addDir(new ZipDirEntry('test'));
+    $fixture->close();
+
+    $this->assertEquals(['test/' => null], $this->entriesWithContentIn($out));
+  }
+
+  #[@test]
+  public function adding_a_dir_via_add() {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out);
+    $fixture->add(new ZipDirEntry('test'));
     $fixture->close();
 
     $this->assertEquals(['test/' => null], $this->entriesWithContentIn($out));

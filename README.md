@@ -18,11 +18,11 @@ use io\File;
 $z= ZipFile::create((new File('dist.zip'))->out());
 
 // Add a directory
-$z->addDir(new ZipDirEntry('META-INF'));
+$dir= $z->add(new ZipDirEntry('META-INF'));
 
 // Add a file
-$e= $z->addFile(new ZipFileEntry('META-INF/version.txt'));
-$e->out()->write($contents);
+$file= $z->add(new ZipFileEntry($dir, 'version.txt'));
+$file->out()->write($contents);
 
 // Close
 $z->close();
