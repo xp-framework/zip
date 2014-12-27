@@ -55,8 +55,10 @@ class ZipArchiveWriter extends \lang\Object {
    * @return  io.archive.zip.ZipArchiveWriter this
    */
   public function usingPassword($password) {
-    $this->password= new ZipCipher();
-    $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+    if (null !== $password) {
+      $this->password= new ZipCipher();
+      $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+    }
     return $this;
   }
 

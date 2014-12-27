@@ -12,10 +12,11 @@ class ZipArchiveWriterTest extends ZipFileTest {
    * Returns an array of entries in a given zip file
    *
    * @param   io.streams.MemoryOutputStream $out
+   * @param   string $password
    * @return  [:string] content
    */
-  protected function entriesWithContentIn($out) {
-    $zip= ZipFile::open(new MemoryInputStream($out->getBytes()));
+  protected function entriesWithContentIn($out, $password= null) {
+    $zip= ZipFile::open(new MemoryInputStream($out->getBytes()))->usingPassword($password);
 
     $entries= [];
     foreach ($zip->entries() as $entry) {
@@ -65,5 +66,16 @@ class ZipArchiveWriterTest extends ZipFileTest {
       ['test/' => null, 'test/1.txt' => 'File #1', 'test/2.txt' => 'File #2'],
       $this->entriesWithContentIn($out)
     );
+  }
+
+  #[@test]
+  public function using_password_protection() {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out)->usingPassword('secret');
+    $fixture->addFile(new ZipFileEntry('test.txt'))->getOutputStream()->write('File contents');
+    $fixture->close();
+
+    $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
   }
 }
