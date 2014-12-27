@@ -11,20 +11,6 @@ use io\streams\Streams;
 abstract class ZipFileContentsTest extends ZipFileTest {
 
   /**
-   * Returns entry content
-   *
-   * @param   io.archive.zip.ZipEntry entry
-   * @return  string
-   */
-  protected function entryContent(\io\archive\zip\ZipEntry $entry) {
-    if ($entry->isDirectory()) {
-      return null;
-    } else {
-      return (string)Streams::readAll($entry->getInputStream());
-    }
-  }
-
-  /**
    * Returns an array of entries in a given zip file
    *
    * @param   io.archive.zip.ZipArchiveReader reader

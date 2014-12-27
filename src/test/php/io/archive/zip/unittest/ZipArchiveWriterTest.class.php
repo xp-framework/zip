@@ -5,7 +5,6 @@ use io\archive\zip\ZipFileEntry;
 use io\archive\zip\ZipDirEntry;
 use io\streams\MemoryOutputStream;
 use io\streams\MemoryInputStream;
-use io\streams\Streams;
 
 class ZipArchiveWriterTest extends ZipFileTest {
 
@@ -20,11 +19,7 @@ class ZipArchiveWriterTest extends ZipFileTest {
 
     $entries= [];
     foreach ($zip->entries() as $entry) {
-      if ($entry->isDirectory()) {
-        $entries[$entry->getName()]= null;
-      } else {
-        $entries[$entry->getName()]= Streams::readAll($entry->getInputStream());
-      }
+      $entries[$entry->getName()]= $this->entryContent($entry);
     }
     return $entries;
   }
