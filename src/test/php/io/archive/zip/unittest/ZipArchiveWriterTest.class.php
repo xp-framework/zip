@@ -90,4 +90,15 @@ class ZipArchiveWriterTest extends ZipFileTest {
     $fixture= ZipFile::create(new MemoryOutputStream());
     $fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
   }
+
+  #[@test]
+  public function using_unicode_names() {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out)->usingUnicodeNames();
+    $fixture->addFile(new ZipFileEntry('関連事業調査.txt'))->getOutputStream()->write('File contents');
+    $fixture->close();
+
+    $this->assertEquals(['関連事業調査.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
+  }
 }

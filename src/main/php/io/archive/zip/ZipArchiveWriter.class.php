@@ -129,8 +129,7 @@ class ZipArchiveWriter extends \lang\Object {
     $this->out && $this->out->close();
 
     if ($this->password) {
-      $cipher= new ZipCipher($this->password);
-      $this->out= new CipheringZipFileOutputStream($this, $entry, $name, $cipher);
+      $this->out= new CipheringZipFileOutputStream($this, $entry, $name, new ZipCipher($this->password));
     } else {
       $this->out= new ZipFileOutputStream($this, $entry, $name);
     }
