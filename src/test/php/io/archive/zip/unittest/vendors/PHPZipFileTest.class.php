@@ -9,7 +9,7 @@
 class PHPZipFileTest extends ZipFileVendorTest {
   
   /** @return string */
-  protected function vendorName() { return 'php'; }
+  protected function vendor() { return 'php'; }
 
   #[@test, @ignore('Cannot create empty zipfiles with PHP')]
   public function emptyZipFile() {

@@ -8,5 +8,5 @@
 class WindowsZipFileTest extends ZipFileVendorTest {
 
   /** @return string */
-  protected function vendorName() { return 'windows'; }
+  protected function vendor() { return 'windows'; }
 }

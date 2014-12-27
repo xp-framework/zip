@@ -9,7 +9,7 @@
 class JavaZipFileTest extends ZipFileVendorTest {
 
   /** @return string */
-  protected function vendorName() { return 'java'; }
+  protected function vendor() { return 'java'; }
 
   #[@test, @ignore('Cannot create empty zipfiles with java.util.zip')]
   public function emptyZipFile() {

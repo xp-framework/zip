@@ -8,5 +8,5 @@
 class InfoZipZipFileTest extends ZipFileVendorTest {
   
   /** @return string */
-  protected function vendorName() { return 'infozip'; }
+  protected function vendor() { return 'infozip'; }
 }

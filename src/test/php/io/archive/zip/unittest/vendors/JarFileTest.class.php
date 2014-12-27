@@ -9,7 +9,7 @@
 class JarFileTest extends ZipFileVendorTest {
 
   /** @return string */
-  protected function vendorName() { return 'jar'; }
+  protected function vendor() { return 'jar'; }
 
   #[@test, @ignore('Cannot create empty zipfiles with `jar`')]
   public function emptyZipFile() {

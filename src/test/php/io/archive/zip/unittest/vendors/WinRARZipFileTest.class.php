@@ -9,7 +9,7 @@
 class WinRARZipFileTest extends ZipFileVendorTest {
 
   /** @return string */
-  protected function vendorName() { return 'winrar'; }
+  protected function vendor() { return 'winrar'; }
 
   /**
    * Tests reading an empty zipfile
