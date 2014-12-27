@@ -1,11 +1,13 @@
 <?php namespace io\archive\zip;
 
 use io\streams\OutputStream;
+use util\Date;
 
 /**
  * Writes to a ZIP archive
  *
  * @see   xp://io.archive.zip.ZipArchive#create
+ * @test  xp://io.archive.zip.unittest.ZipArchiveWriterTest
  */
 class ZipArchiveWriter extends \lang\Object {
   protected
