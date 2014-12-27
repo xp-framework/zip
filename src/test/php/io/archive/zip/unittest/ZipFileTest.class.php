@@ -1,56 +1,18 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipFile;
-use io\archive\zip\ZipEntry;
-use io\archive\zip\ZipArchiveReader;
-use io\streams\Streams;
+use io\streams\MemoryOutputStream;
+use io\streams\MemoryInputStream;
 
-/**
- * Base class for testing zip files
- *
- * @see   xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
- * @see   xp://net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
- */
-#[@action(new \unittest\actions\ExtensionAvailable('zlib'))]
-abstract class ZipFileTest extends \unittest\TestCase {
+class ZipFileFactoryTest extends AbstractZipFileTest {
 
-  /**
-   * Returns entry content; or NULL for directories
-   *
-   * @param   io.archive.zip.ZipEntry $entry
-   * @return  string
-   */
-  protected function entryContent(ZipEntry $entry) {
-    if ($entry->isDirectory()) {
-      return null;
-    } else {
-      return (string)Streams::readAll($entry->in());
-    }
+  #[@test]
+  public function zipfile_create() {
+    $this->assertInstanceOf('io.archive.zip.ZipArchiveWriter', ZipFile::create(new MemoryOutputStream()));
   }
 
-  /**
-   * Returns an archive reader for a given zip file
-   *
-   * @param   string $package
-   * @param   string $name
-   * @return  io.archive.zip.ZipArchiveReader
-   */
-  protected function archiveReaderFor($package, $name) {
-    return ZipFile::open($this->getClass()
-      ->getPackage()
-      ->getPackage($package)
-      ->getResourceAsStream($name.'.zip')
-      ->getInputStream()
-    );
-  }
-  
-  /**
-   * Returns an array of entries in a given zip file
-   *
-   * @param   io.archive.zip.ZipArchiveReader $reader
-   * @return  io.archive.zip.ZipEntry[]
-   */
-  protected function entriesIn(ZipArchiveReader $reader) {
-    return iterator_to_array($reader->entries());
+  #[@test]
+  public function zipfile_open() {
+    $this->assertInstanceOf('io.archive.zip.ZipArchiveReader', ZipFile::open(new MemoryInputStream('PK...')));
   }
 }

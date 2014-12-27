@@ -8,7 +8,7 @@ use io\streams\Streams;
  * @see   xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
  * @see   xp://net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
  */
-abstract class ZipFileContentsTest extends ZipFileTest {
+abstract class ZipFileContentsTest extends AbstractZipFileTest {
 
   /**
    * Returns an array of entries in a given zip file

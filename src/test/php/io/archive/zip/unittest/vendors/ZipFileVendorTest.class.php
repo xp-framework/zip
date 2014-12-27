@@ -3,7 +3,7 @@
 /**
  * Abstract base class
  */
-abstract class ZipFileVendorTest extends \io\archive\zip\unittest\ZipFileTest {
+abstract class ZipFileVendorTest extends \io\archive\zip\unittest\AbstractZipFileTest {
   
   /**
    * Returns vendor name

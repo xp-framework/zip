@@ -3,7 +3,7 @@
 /**
  * TestCase for malformed zip files
  */
-class MalformedZipFileTest extends ZipFileTest {
+class MalformedZipFileTest extends AbstractZipFileTest {
 
   #[@test, @expect('lang.FormatException')]
   public function reading_zero_byte_long_file() {

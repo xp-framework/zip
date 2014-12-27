@@ -9,7 +9,7 @@ use io\archive\zip\ZipDirEntry;
  * @see     xp://io.archive.zip.ZipFileEntry
  * @see     xp://io.archive.zip.ZipDirEntry
  */
-class ZipEntryTest extends \unittest\TestCase {
+class ZipEntryTest extends AbstractZipFileTest {
 
   #[@test]
   public function simpleFileName() {

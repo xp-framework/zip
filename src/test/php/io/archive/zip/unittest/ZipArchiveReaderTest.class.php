@@ -5,7 +5,7 @@
  *
  * @see   xp://io.archive.zip.ZipArchiveReader
  */
-class ZipArchiveReaderTest extends ZipFileTest {
+class ZipArchiveReaderTest extends AbstractZipFileTest {
 
   #[@test]
   public function close() {
