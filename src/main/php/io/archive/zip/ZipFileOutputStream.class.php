@@ -16,18 +16,21 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
     $writer      = null,
     $compression = null,
     $data        = null,
+    $name        = null,
     $size        = 0,
     $md          = null;
   
   /**
    * Constructor
    *
-   * @param   io.archive.zip.ZipArchiveWriter writer
-   * @param   io.archive.zip.ZipFileEntry file
+   * @param   io.archive.zip.ZipArchiveWriter $writer
+   * @param   io.archive.zip.ZipFileEntry $file
+   * @param   string $name
    */
-  public function __construct(ZipArchiveWriter $writer, ZipFileEntry $file) {
+  public function __construct(ZipArchiveWriter $writer, ZipFileEntry $file, $name) {
     $this->writer= $writer;
     $this->file= $file;
+    $this->name= $name;
     $this->data= null;
     $this->md= CRC32::digest();
   }
@@ -75,6 +78,7 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
     $bytes= $this->data->getBytes();
     $this->writer->writeFile(
       $this->file,
+      $this->name,
       $this->size, 
       strlen($bytes),
       create(new CRC32($this->md->digest()))->asInt32(),

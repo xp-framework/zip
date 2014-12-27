@@ -11,25 +11,28 @@ use security\checksum\CRC32;
  */
 class CipheringZipFileOutputStream extends \lang\Object implements OutputStream {
   protected
-    $writer      = NULL,
-    $compression = NULL,
-    $data        = NULL,
+    $writer      = null,
+    $compression = null,
+    $data        = null,
+    $name        = null,
     $size        = 0,
-    $md          = NULL;
+    $md          = null;
     
-  protected $cipher= NULL;
+  protected $cipher= null;
   
   /**
    * Constructor
    *
-   * @param   io.archive.zip.ZipArchiveWriter writer
-   * @param   io.archive.zip.ZipFileEntry file
-   * @param   io.archive.zip.ZipCipher cipher
+   * @param   io.archive.zip.ZipArchiveWriter $writer
+   * @param   io.archive.zip.ZipFileEntry $file
+   * @param   string $name
+   * @param   io.archive.zip.ZipCipher $cipher
    */
-  public function __construct(ZipArchiveWriter $writer, ZipFileEntry $file, ZipCipher $cipher) {
+  public function __construct(ZipArchiveWriter $writer, ZipFileEntry $file, $name, ZipCipher $cipher) {
     $this->writer= $writer;
     $this->file= $file;
-    $this->data= NULL;
+    $this->name= $name;
+    $this->data= null;
     $this->md= CRC32::digest();
     $this->cipher= $cipher;
   }
@@ -92,6 +95,7 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
     // Finally, write header, preamble and bytes
     $this->writer->writeFile(
       $this->file,
+      $this->name,
       $this->size, 
       strlen($bytes) + strlen($preamble),
       $crc32,

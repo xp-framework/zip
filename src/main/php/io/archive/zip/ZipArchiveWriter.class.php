@@ -2,6 +2,7 @@
 
 use io\streams\OutputStream;
 use util\Date;
+use lang\IllegalArgumentException;
 
 /**
  * Writes to a ZIP archive
@@ -72,7 +73,9 @@ class ZipArchiveWriter extends \lang\Object {
    * @throws  lang.IllegalArgumentException in case the filename is longer than 65535 bytes
    */
   public function addDir(ZipDirEntry $entry) {
-    if (strlen($entry->getName()) > 0xFFFF) {
+    $name= iconv(\xp::ENCODING, $this->unicode ? 'utf-8' : 'cp437', str_replace('\\', '/', $entry->getName()));
+    $nameLength= strlen($name);
+    if ($nameLength > 0xFFFF) {
       throw new IllegalArgumentException('Filename too long ('.$nameLength.')');
     }
 
@@ -80,11 +83,8 @@ class ZipArchiveWriter extends \lang\Object {
     $this->out= null;
     
     $mod= $entry->getLastModified();
-    $name= iconv(\xp::ENCODING, $this->unicode ? 'utf-8' : 'cp437', str_replace('\\', '/', $entry->getName()));
-    $nameLength= strlen($name);
     $extraLength= 0;
     $extra= '';
-    
     $info= pack(
       'vvvvvVVVvv',
       10,                       // version
@@ -120,17 +120,19 @@ class ZipArchiveWriter extends \lang\Object {
    * @throws  lang.IllegalArgumentException in case the filename is longer than 65535 bytes
    */
   public function addFile(ZipFileEntry $entry) {
-    if (strlen($entry->getName()) > 0xFFFF) {
-      throw new IllegalArgumentException('Filename too long ('.strlen($entry->getName()).')');
+    $name= iconv(\xp::ENCODING, $this->unicode ? 'utf-8' : 'cp437', str_replace('\\', '/', $entry->getName()));
+    $nameLength= strlen($name);
+    if ($nameLength > 0xFFFF) {
+      throw new IllegalArgumentException('Filename too long ('.$nameLength.')');
     }
 
     $this->out && $this->out->close();
 
     if ($this->password) {
       $cipher= new ZipCipher($this->password);
-      $this->out= new CipheringZipFileOutputStream($this, $entry, $cipher);
+      $this->out= new CipheringZipFileOutputStream($this, $entry, $name, $cipher);
     } else {
-      $this->out= new ZipFileOutputStream($this, $entry);
+      $this->out= new ZipFileOutputStream($this, $entry, $name);
     }
     
     $entry->os= $this->out;
@@ -178,14 +180,14 @@ class ZipArchiveWriter extends \lang\Object {
    * Write a file entry
    *
    * @param   io.archive.zip.ZipFile file
+   * @param   string name
    * @param   int size
    * @param   int compressed
    * @param   int crc32
    * @param   int flags
    */
-  public function writeFile($file, $size, $compressed, $crc32, $flags) {
+  public function writeFile($file, $name, $size, $compressed, $crc32, $flags) {
     $mod= $file->getLastModified();
-    $name= iconv(\xp::ENCODING, $this->unicode ? 'utf-8' : 'cp437', str_replace('\\', '/', $file->getName()));
     $nameLength= strlen($name);
     $method= $file->getCompression()->ordinal();
     $extraLength= 0;

@@ -78,4 +78,16 @@ class ZipArchiveWriterTest extends ZipFileTest {
 
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
   }
+
+  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Filename too long (65536)')]
+  public function cannot_add_files_with_names_longer_than_65535_characters() {
+    $fixture= ZipFile::create(new MemoryOutputStream());
+    $fixture->addFile(new ZipFileEntry(str_repeat('n', 65535 + 1)));
+  }
+
+  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Filename too long (65536)')]
+  public function cannot_add_dirs_with_names_longer_than_65535_characters() {
+    $fixture= ZipFile::create(new MemoryOutputStream());
+    $fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
+  }
 }
