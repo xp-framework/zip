@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.0 / 2015-10-01
+
 * Added `add()` method which calls addFile() or addDir() depending on the
   given type given.
   (@thekid)
