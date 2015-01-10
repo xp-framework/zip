@@ -2,12 +2,10 @@
 
 use util\Date;
 
-
 /**
  * Represents an entry in a zip archive
  *
  * @see      xp://io.archive.zip.ZipArchive
- * @purpose  Interface
  */
 interface ZipEntry {
   

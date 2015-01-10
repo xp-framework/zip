@@ -1,6 +1,6 @@
 <?php namespace io\archive\zip;
 
-
+use util\Date;
 
 /**
  * Represents a Dir entry in a zip archive
@@ -18,9 +18,9 @@ class ZipDirEntry extends \lang\Object implements ZipEntry {
   /**
    * Constructor
    *
-   * @param   string name
+   * @param   var... $args
    */
-  public function __construct($name) {
+  public function __construct() {
     $this->name= '';
     $args= func_get_args();
     foreach ($args as $part) {
@@ -31,7 +31,7 @@ class ZipDirEntry extends \lang\Object implements ZipEntry {
       }
     }
     $this->name= rtrim($this->name, '/').'/';
-    $this->mod= \util\Date::now();
+    $this->mod= Date::now();
     $this->compression= Compression::$NONE;
   }
   
@@ -58,7 +58,7 @@ class ZipDirEntry extends \lang\Object implements ZipEntry {
    *
    * @param   util.Date lastModified
    */
-  public function setLastModified(\util\Date $lastModified) {
+  public function setLastModified(Date $lastModified) {
     $this->mod= $lastModified;
   }
 

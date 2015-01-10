@@ -1,7 +1,5 @@
 <?php namespace io\archive\zip;
 
-
-
 /**
  * Iterates on ZIP archive entries
  *

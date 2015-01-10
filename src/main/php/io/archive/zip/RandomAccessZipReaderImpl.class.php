@@ -1,7 +1,8 @@
 <?php namespace io\archive\zip;
 
 use io\streams\Seekable;
-
+use io\streams\InputStream;
+use lang\FormatException;
 
 /**
  * Zip archive reader that works on Seekable input streams.
@@ -14,7 +15,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
    *
    * @param   io.streams.InputStream stream
    */
-  public function __construct(\io\streams\InputStream $stream) {
+  public function __construct(InputStream $stream) {
     parent::__construct(cast($stream, 'io.streams.Seekable'));
   }
   
@@ -58,7 +59,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
     // File pointer is positioned at start of the central directory
     while (self::EOCD !== ($sig= (string)$this->streamRead(4))) {
       if (self::DHDR != $sig) 
-        throw new \lang\FormatException('No central directory header signature found, have: '.addcslashes($sig, "\0..\17"));
+        throw new FormatException('No central directory header signature found, have: '.addcslashes($sig, "\0..\17"));
 
       $header= unpack(
         'vmade/vversion/vflags/vcompression/vtime/vdate/Vcrc/Vcompressed/Vuncompressed/vnamelen/vextralen/vcommentlen/vdiskno/vattr/Vextattr/Voffset', 
@@ -72,7 +73,13 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
       $this->addToIndex($filename, $header);
     }
   }
-  
+
+  /**
+   * Seeks to central directory
+   *
+   * @return void
+   * @throws lang.FormatException
+   */
   protected function seekCentralDirectory() {
 
     // Seek to start of file, so we can determine filesize
@@ -84,7 +91,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
     // this code currently does not support this and just assumes the
     // comment has 0 byte length.)
     $offset= $fileSize- 22;
-    if ($offset < 0) throw new \lang\FormatException('File too short for a .zip');
+    if ($offset < 0) throw new FormatException('File too short for a .zip');
     $this->streamPosition($offset);
     
     // By reading one byte at a time, try to find the magic marker sequence
@@ -96,9 +103,10 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
       $marker= substr($marker, -3);
     }
     
-    if (0 == $this->streamAvailable()) 
-      throw new \lang\FormatException('Could not find central directory; currently not supporting archives w/ file comments.');
-    
+    if (0 == $this->streamAvailable()) {
+      throw new FormatException('Could not find central directory; currently not supporting archives w/ file comments.');
+    }
+
     // Read offset of central directory from end-of-central-directory "header"
     $offset= unpack('vdisk/vstart/vtotal/ventries/Vsize/Voffset', $this->streamRead(16));
     $this->streamPosition($offset['offset']);

@@ -1,6 +1,6 @@
 <?php namespace io\archive\zip;
 
-
+use util\Date;
 
 /**
  * Represents a file entry in a zip archive
@@ -23,7 +23,7 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
   /**
    * Constructor
    *
-   * @param   var... parts
+   * @param   var... $args
    */
   public function __construct() {
     $this->name= '';
@@ -63,7 +63,7 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
    *
    * @param   util.Date lastModified
    */
-  public function setLastModified(\util\Date $lastModified) {
+  public function setLastModified(Date $lastModified) {
     $this->mod= $lastModified;
   }
 

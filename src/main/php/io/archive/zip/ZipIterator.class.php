@@ -1,14 +1,13 @@
 <?php namespace io\archive\zip;
 
-use util\XPIterator;
-
+use util\NoSuchElementException;
 
 /**
  * Iterates on ZIP archive entries
  *
  * @test    xp://net.xp_framework.unittest.io.archive.ZipFileIteratorTest
  */
-class ZipIterator extends \lang\Object implements XPIterator {
+class ZipIterator extends \lang\Object implements \util\XPIterator {
   protected $impl= null;
   protected $entry= null;
   protected $more= true;
@@ -56,7 +55,7 @@ class ZipIterator extends \lang\Object implements XPIterator {
    */
   public function next() {
     if (!$this->nextEntry()) {
-      throw new \util\NoSuchElementException('No more entries in ZIP file');
+      throw new NoSuchElementException('No more entries in ZIP file');
     }
 
     $entry= $this->entry;

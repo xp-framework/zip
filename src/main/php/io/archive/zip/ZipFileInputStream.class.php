@@ -1,18 +1,12 @@
-<?php namespace io\archive\zip;/* This file is part of the XP framework
- *
- * $Id$
- */
+<?php namespace io\archive\zip;
 
-use io\streams\InputStream;
-
+use io\IOException;
 
 /**
  * Zip File input stream. Reads from the current position up until a
  * certain length.
- *
- * @purpose  InputStream implementation
  */
-class ZipFileInputStream extends \lang\Object implements InputStream {
+class ZipFileInputStream extends \lang\Object implements \io\streams\InputStream {
   protected 
     $reader      = null,
     $start       = 0,
@@ -42,7 +36,7 @@ class ZipFileInputStream extends \lang\Object implements InputStream {
     if (0 === $this->pos) {
       $this->reader->streamPosition($this->start);
     } else if ($this->pos >= $this->length) {
-      throw new \io\IOException('EOF');
+      throw new IOException('EOF');
     }
     $chunk= $this->reader->streamRead(min($limit, $this->length- $this->pos));
     $l= strlen($chunk);

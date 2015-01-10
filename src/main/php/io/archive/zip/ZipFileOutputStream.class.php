@@ -4,7 +4,6 @@ use io\streams\OutputStream;
 use io\streams\MemoryOutputStream;
 use security\checksum\CRC32;
 
-
 /**
  * Output stream for files
  *
@@ -81,7 +80,7 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
       $this->name,
       $this->size, 
       strlen($bytes),
-      create(new CRC32($this->md->digest()))->asInt32(),
+      (new CRC32($this->md->digest()))->asInt32(),
       0
     );
     $this->writer->streamWrite($bytes);

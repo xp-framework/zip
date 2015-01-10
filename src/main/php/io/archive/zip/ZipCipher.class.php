@@ -2,7 +2,6 @@
 
 use math\BigInt;
 
-
 /**
  * Zip Cipher.
  *
@@ -14,7 +13,7 @@ class ZipCipher extends \lang\Object {
 
   // Calculated by Vbaccelerator.Components.Algorithms.CRC32 class seen at
   // http://www.vbaccelerator.com/home/net/code/libraries/CRC32/Crc32_zip_CRC32_CRC32_cs.asp
-  private static $crc32= array(
+  private static $crc32= [
     0, 
     1996959894, 3993919788, 2567524794, 124634137,  1886057615, 3915621685,
     2657392035, 249268274,  2044508324, 3772115230, 2547177864, 162941995,
@@ -59,7 +58,7 @@ class ZipCipher extends \lang\Object {
     3401237130, 1404277552, 615818150,  3134207493, 3453421203, 1423857449,
     601450431,  3009837614, 3294710456, 1567103746, 711928724,  3020668471,
     3272380065, 1510334235, 755167117
-  );
+  ];
   
   /**
    * Constructor.
@@ -68,7 +67,7 @@ class ZipCipher extends \lang\Object {
    */
   public function __construct($copy= null) {
     if (null === $copy) {
-      $this->keys= array(new BigInt(0x12345678), new BigInt(0x23456789), new BigInt(0x34567890));
+      $this->keys= [new BigInt(0x12345678), new BigInt(0x23456789), new BigInt(0x34567890)];
     } else {
       foreach ($copy->keys as $key) {
         $this->keys[]= clone $key;
@@ -77,25 +76,24 @@ class ZipCipher extends \lang\Object {
   }
   
   /**
-   * Initialize this cipher
+   * Initialize this cipher. From the original spec:
    *
-   * From the original spec:
-   * <pre>
-   *   Step 1 - Initializing the encryption keys
-   *   -----------------------------------------
-   *   Start with these keys:        
-   *   Key(0) := 305419896 (0x12345678)
-   *   Key(1) := 591751049 (0x23456789)
-   *   Key(2) := 878082192 (0x34567890)
+   * ```
+   * Step 1 - Initializing the encryption keys
+   * -----------------------------------------
+   * Start with these keys:        
+   * Key(0) := 305419896 (0x12345678)
+   * Key(1) := 591751049 (0x23456789)
+   * Key(2) := 878082192 (0x34567890)
    *
-   *   Then, initialize the keys with a password:
+   * Then, initialize the keys with a password:
    *
-   *   loop for i from 0 to length(password)-1
-   *       update_keys(password(i))
-   *   end loop
-   * </pre>
+   * loop for i from 0 to length(password)-1
+   *     update_keys(password(i))
+   * end loop
+   * ```
    *
-   * @param   string passphrase
+   * @param   string $passphrase
    */
   public function initialize($passphrase) {
     for ($i= 0, $s= strlen($passphrase); $i < $s; $i++) {
@@ -104,18 +102,17 @@ class ZipCipher extends \lang\Object {
   }
 
   /**
-   * Decipher a chunk
+   * Decipher a chunk. rom the original spec:
    *
-   * From the original spec:
-   * <pre>
-   *   loop for i from 0 to 11
-   *       C := buffer(i) ^ decrypt_byte()
-   *       update_keys(C)
-   *       buffer(i) := C
-   *   end loop
-   * </pre>
+   * ```
+   * loop for i from 0 to 11
+   *     C := buffer(i) ^ decrypt_byte()
+   *     update_keys(C)
+   *     buffer(i) := C
+   * end loop
+   * ```
    *
-   * @param   string chunk
+   * @param   string $chunk
    * @return  string plain
    */
   public function decipher($chunk) {
@@ -131,7 +128,7 @@ class ZipCipher extends \lang\Object {
   /**
    * Cipher a chunk
    *
-   * @param   string plain
+   * @param   string $plain
    * @return  string ciphered
    */
   public function cipher($plain) {
@@ -147,8 +144,8 @@ class ZipCipher extends \lang\Object {
   /**
    * CRC32
    *
-   * @param   math.BigInt key
-   * @param   int char
+   * @param   math.BigInt $key
+   * @param   int $char
    * @return  math.BigInt updated checksum
    */
   protected function crc32($key, $char) {
@@ -157,21 +154,20 @@ class ZipCipher extends \lang\Object {
   }
   
   /**
-   * Update keys
+   * Update keys. From the original spec:
+   * 
+   * ```
+   * Where update_keys() is defined as:
+   * 
+   * update_keys(char):
+   *   Key(0) := crc32(key(0),char)
+   *   Key(1) := Key(1) + (Key(0) bitwiseAND 000000ffH)
+   *   Key(1) := Key(1) * 134775813 + 1
+   *   Key(2) := crc32(key(2),key(1) rightshift 24)
+   * end update_keys
+   * ```
    *
-   * From the original spec:
-   * <pre>
-   *   Where update_keys() is defined as:
-   *   
-   *   update_keys(char):
-   *     Key(0) := crc32(key(0),char)
-   *     Key(1) := Key(1) + (Key(0) bitwiseAND 000000ffH)
-   *     Key(1) := Key(1) * 134775813 + 1
-   *     Key(2) := crc32(key(2),key(1) rightshift 24)
-   *   end update_keys
-   * </pre>
-   *
-   * @param   int c
+   * @param   int $c
    */
   protected function updateKeys($c) {
     $this->keys[0]= $this->crc32($this->keys[0], $c);
@@ -181,16 +177,15 @@ class ZipCipher extends \lang\Object {
   }
   
   /**
-   * Return magic byte
-   *
-   * From the original spec:
-   * <pre>
-   *  unsigned char decrypt_byte()
-   *      local unsigned short temp
-   *      temp :=- Key(2) | 2
-   *      decrypt_byte := (temp * (temp ^ 1)) bitshift-right 8
-   *  end decrypt_byte
-   * </pre>
+   * Return magic byte. From the original spec:
+   * 
+   * ```
+   * unsigned char decrypt_byte()
+   *     local unsigned short temp
+   *     temp :=- Key(2) | 2
+   *     decrypt_byte := (temp * (temp ^ 1)) bitshift-right 8
+   * end decrypt_byte
+   * ```
    *
    * @return  int
    */
