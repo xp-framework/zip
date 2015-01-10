@@ -2,7 +2,8 @@
 
 use io\streams\InputStream;
 use util\Date;
-
+use lang\FormatException;
+use lang\IllegalArgumentException;
 
 /**
  * Abstract base class for zip reader implementations
@@ -154,6 +155,8 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
    * Gets current entry
    *
    * @return  io.archive.zip.ZipEntry
+   * @throws  lang.FormatException
+   * @throws  lang.IllegalArgumentException on password mismatch
    */
   public function currentEntry() {
     $type= $this->streamRead(4);
@@ -203,7 +206,7 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
             $this->streamPosition($position);
           }
           
-          if (!isset($this->index[$name])) throw new \lang\FormatException('.zip archive broken: cannot find "'.$name.'" in central directory.');
+          if (!isset($this->index[$name])) throw new FormatException('.zip archive broken: cannot find "'.$name.'" in central directory.');
           $header= $this->index[$name];
 
           // In case we're here, we can be sure to have a 
@@ -229,7 +232,7 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
           
           // Verify            
           if (ord($preamble{11}) !== (($header['crc'] >> 24) & 0xFF)) {
-            throw new \lang\IllegalArgumentException('The password did not match ('.ord($preamble{11}).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
+            throw new IllegalArgumentException('The password did not match ('.ord($preamble{11}).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
           }
           
           // Password matches.
@@ -255,7 +258,7 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
         return null;
       }
     }
-    throw new \lang\FormatException('Unknown byte sequence '.addcslashes($type, "\0..\17"));
+    throw new FormatException('Unknown byte sequence '.addcslashes($type, "\0..\17"));
   }
   
   protected function addToIndex($filename, $header) {

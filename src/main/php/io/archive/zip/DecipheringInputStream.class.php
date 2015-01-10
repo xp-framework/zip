@@ -2,7 +2,6 @@
 
 use io\streams\InputStream;
 
-
 /**
  * Deciphers using ZipCipher class
  *
