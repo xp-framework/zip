@@ -103,7 +103,6 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
     );
     $this->writer->streamWrite($preamble);
     $this->writer->streamWrite($bytes);
-    
-    delete($this->data);
+    unset($this->data);
   }
 }

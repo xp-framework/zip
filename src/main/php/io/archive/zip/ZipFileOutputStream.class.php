@@ -84,6 +84,6 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
       0
     );
     $this->writer->streamWrite($bytes);
-    delete($this->data);
+    unset($this->data);
   }
 }
