@@ -3,6 +3,10 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.2 / 2015-07-12
+
+* Added forward compatibility with XP 6.4.0 - @thekid
+
 ## 6.0.1 / 2015-02-12
 
 * Changed dependency to use XP ~6.0 (instead of dev-master) - @thekid
