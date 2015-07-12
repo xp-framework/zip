@@ -77,7 +77,7 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
     if (null === $this->data) return;     // Already written
 
     // Calculate CRC32
-    $crc32= create(new CRC32($this->md->digest()))->asInt32();
+    $crc32= (new CRC32($this->md->digest()))->asInt32();
 
     // Create random bytes
     $rand= '';
