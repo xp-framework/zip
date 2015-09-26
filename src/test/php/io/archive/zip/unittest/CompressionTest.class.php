@@ -1,5 +1,6 @@
 <?php namespace io\archive\zip\unittest;
 
+use lang\IllegalArgumentException;
 use io\archive\zip\Compression;
 
 /**
@@ -24,7 +25,7 @@ class CompressionTest extends \unittest\TestCase {
     $this->assertEquals(Compression::$BZ, Compression::getInstance(12));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unknownInstance() {
     Compression::getInstance(-1);
   }

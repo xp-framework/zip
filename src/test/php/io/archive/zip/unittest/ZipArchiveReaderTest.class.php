@@ -9,7 +9,7 @@ class ZipArchiveReaderTest extends AbstractZipFileTest {
 
   #[@test]
   public function close() {
-    $stream= newinstance('io.streams.InputStream', array(), '{
+    $stream= newinstance('io.streams.InputStream', [], '{
       public $closed= FALSE;
       public function read($limit= 8192) { return ""; }
       public function available() { return 0; }

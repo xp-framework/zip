@@ -21,7 +21,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   #[@test]
   public function nofiles() {
     $this->assertEquals(
-      array(),
+      [],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'nofiles'))
     );
   }
@@ -29,7 +29,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   #[@test]
   public function onefile() {
     $this->assertEquals(
-      array('hello.txt' => 'World'),
+      ['hello.txt' => 'World'],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'onefile'))
     );
   }
@@ -37,7 +37,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   #[@test]
   public function onedir() {
     $this->assertEquals(
-      array('dir/' => null),
+      ['dir/' => null],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'onedir'))
     );
   }
@@ -45,7 +45,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   #[@test]
   public function twofiles() {
     $this->assertEquals(
-      array('one.txt' => 'Eins', 'two.txt' => 'Zwei'),
+      ['one.txt' => 'Eins', 'two.txt' => 'Zwei'],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'twofiles'))
     );
   }

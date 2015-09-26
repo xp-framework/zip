@@ -14,7 +14,7 @@ class ZipFileEntriesTest extends ZipFileContentsTest {
    * @return  [:string] content
    */
   protected function entriesWithContentIn(\io\archive\zip\ZipArchiveReader $zip) {
-    $entries= array();
+    $entries= [];
     foreach ($zip->entries() as $entry) {
       $entries[$entry->getName()]= $this->entryContent($entry);
     }
