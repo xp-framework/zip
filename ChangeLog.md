@@ -3,6 +3,11 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.1.0 / 2015-09-26
+
+* Added PHP 7 support - @thekid
+* Merged PR #2: Use short array syntax / ::class in annotations - @thekid
+
 ## 6.0.2 / 2015-07-12
 
 * Added forward compatibility with XP 6.4.0 - @thekid
