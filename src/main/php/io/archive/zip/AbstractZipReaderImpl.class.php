@@ -14,7 +14,7 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
   public $skip= 0;
 
   protected $stream= null;
-  protected $index= array();
+  protected $index= [];
   protected $password= null;
   protected $position= 0;
 
@@ -179,8 +179,8 @@ abstract class AbstractZipReaderImpl extends \lang\Object {
           // it as-is. Do this as certain vendors (Java e.g.) always use utf-8 
           // but do not indicate this via EFS.
           $decoded= $this->decodeName($name, $header['flags'] & 2048
-            ? array('utf-8' => \xp::ENCODING)
-            : array('utf-8' => \xp::ENCODING, 'cp437' => 'iso-8859-1', 'cp1252' => \xp::ENCODING)
+            ? ['utf-8' => \xp::ENCODING]
+            : ['utf-8' => \xp::ENCODING, 'cp437' => 'iso-8859-1', 'cp1252' => \xp::ENCODING]
           );
         }
         $extra= $this->streamRead($header['extralen']);

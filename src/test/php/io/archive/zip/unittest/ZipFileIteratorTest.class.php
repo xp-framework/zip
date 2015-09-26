@@ -1,5 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
+use util\NoSuchElementException;
+
 /**
  * Base class for testing zip file contents
  *
@@ -14,7 +16,7 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
    * @return  [:string] content
    */
   protected function entriesWithContentIn(\io\archive\zip\ZipArchiveReader $zip) {
-    $entries= array();
+    $entries= [];
     for ($it= $zip->iterator(); $it->hasNext(); ) {
       $entry= $it->next();
       $entries[$entry->getName()]= $this->entryContent($entry);
@@ -27,7 +29,7 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
     $this->assertFalse($this->archiveReaderFor('fixtures', 'nofiles')->iterator()->hasNext());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function iterationOverEndForEmpty() {
     $this->archiveReaderFor('fixtures', 'nofiles')->iterator()->next();
   }
@@ -39,7 +41,7 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
     try {
       $it->next();
       $this->fail('Expected exception not thrown', null, 'util.NoSuchElementException');
-    } catch (\util\NoSuchElementException $expected) { }
+    } catch (NoSuchElementException $expected) { }
     $this->assertFalse($it->hasNext());
   }
 

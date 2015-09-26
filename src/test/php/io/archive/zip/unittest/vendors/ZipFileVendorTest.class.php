@@ -14,7 +14,7 @@ abstract class ZipFileVendorTest extends \io\archive\zip\unittest\AbstractZipFil
   
   #[@test]
   public function emptyZipFile() {
-    $this->assertEquals(array(), $this->entriesIn($this->archiveReaderFor($this->vendor(), 'empty')));
+    $this->assertEquals([], $this->entriesIn($this->archiveReaderFor($this->vendor(), 'empty')));
   }
 
   #[@test]

@@ -46,7 +46,7 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
    */
   public function withCompression(Compression $compression, $level= 6) {
     $this->data= new MemoryOutputStream();
-    $this->compression= array($compression, $level);
+    $this->compression= [$compression, $level];
     return $this;
   }
   

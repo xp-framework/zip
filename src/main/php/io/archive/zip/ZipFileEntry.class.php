@@ -37,7 +37,7 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
     }
     $this->name= rtrim($this->name, '/');
     $this->mod= \util\Date::now();
-    $this->compression= array(Compression::$NONE, 6);
+    $this->compression= [Compression::$NONE, 6];
   }
   
   /**
@@ -83,7 +83,7 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
    * @param   io.archive.zip.Compression compression
    */
   public function setCompression(Compression $compression, $level= 6) {
-    $this->compression= array($compression, $level);
+    $this->compression= [$compression, $level];
   }
 
   /**

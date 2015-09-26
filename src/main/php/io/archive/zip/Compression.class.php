@@ -43,7 +43,7 @@ abstract class Compression extends Enum {
   public static $NONE, $GZ, $BZ;
   
   static function __static() {
-    self::$NONE= newinstance(__CLASS__, array(0, 'NONE'), '{
+    self::$NONE= newinstance(__CLASS__, [0, 'NONE'], '{
       static function __static() { }
       
       public function getCompressionStream(\io\streams\OutputStream $out, $level= 6) {
@@ -54,7 +54,7 @@ abstract class Compression extends Enum {
         return $in;
       }
     }');
-    self::$GZ= newinstance(__CLASS__, array(8, 'GZ'), '{
+    self::$GZ= newinstance(__CLASS__, [8, 'GZ'], '{
       static function __static() { }
       
       public function getCompressionStream(\io\streams\OutputStream $out, $level= 6) {
@@ -65,7 +65,7 @@ abstract class Compression extends Enum {
         return new \io\streams\InflatingInputStream($in);
       }
     }');
-    self::$BZ= newinstance(__CLASS__, array(12, 'BZ'), '{
+    self::$BZ= newinstance(__CLASS__, [12, 'BZ'], '{
       static function __static() { }
       
       public function getCompressionStream(\io\streams\OutputStream $out, $level= 6) {
