@@ -1,5 +1,6 @@
 <?php namespace io\archive\zip\unittest;
 
+use io\archive\zip\ZipEntry;
 use util\NoSuchElementException;
 
 /**
@@ -49,7 +50,7 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
   public function iterator() {
     $it= $this->archiveReaderFor('fixtures', 'onefile')->iterator();
     $this->assertTrue($it->hasNext());
-    $this->assertInstanceOf('io.archive.zip.ZipEntry', $it->next());
+    $this->assertInstanceOf(ZipEntry::class, $it->next());
     $this->assertFalse($it->hasNext());
   }
 }
