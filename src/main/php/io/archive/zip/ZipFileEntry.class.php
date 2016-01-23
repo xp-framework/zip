@@ -163,7 +163,7 @@ class ZipFileEntry extends \lang\Object implements ZipEntry {
       "  [compression ] %s level %d\n".
       "  [size        ] %d\n".
       "}",
-      $this->getClassName(),
+      nameof($this),
       $this->name,
       \xp::stringOf($this->mod),
       \xp::stringOf($this->compression[0]),

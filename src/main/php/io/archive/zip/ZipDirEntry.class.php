@@ -117,7 +117,7 @@ class ZipDirEntry extends \lang\Object implements ZipEntry {
       "%s(%s)@{\n".
       "  [lastModified] %s\n".
       "}",
-      $this->getClassName(),
+      nameof($this),
       $this->name,
       \xp::stringOf($this->mod)
     );

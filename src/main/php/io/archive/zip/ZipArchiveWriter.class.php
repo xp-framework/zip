@@ -280,7 +280,7 @@ class ZipArchiveWriter extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'('.$this->stream->toString().")@{\n";
+    $s= nameof($this).'('.$this->stream->toString().")@{\n";
     foreach ($this->dir as $name => $entry) {
       $s.= '  dir{'.dechex($entry['type']).': "'.$name.'" @ '.$entry['pointer']."}\n";
     }
