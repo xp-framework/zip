@@ -40,7 +40,7 @@ abstract class AbstractZipFileTest extends \unittest\TestCase {
       ->getPackage()
       ->getPackage($package)
       ->getResourceAsStream($name.'.zip')
-      ->getInputStream()
+      ->in()
     );
   }
   
