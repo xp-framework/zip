@@ -7,7 +7,7 @@ use util\NoSuchElementException;
  *
  * @test    xp://net.xp_framework.unittest.io.archive.ZipFileIteratorTest
  */
-class ZipIterator extends \lang\Object implements \util\XPIterator {
+class ZipIterator implements \util\XPIterator {
   protected $impl= null;
   protected $entry= null;
   protected $more= true;

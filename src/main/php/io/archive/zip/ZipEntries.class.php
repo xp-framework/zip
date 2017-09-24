@@ -5,7 +5,7 @@
  *
  * @test    xp://net.xp_framework.unittest.io.archive.ZipFileEntriesTest
  */
-class ZipEntries extends \lang\Object implements \Iterator {
+class ZipEntries implements \Iterator {
   protected $impl= null;
   protected $entry= null;
   protected $offset= 0;

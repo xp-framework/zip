@@ -6,7 +6,7 @@ use io\IOException;
  * Zip File input stream. Reads from the current position up until a
  * certain length.
  */
-class ZipFileInputStream extends \lang\Object implements \io\streams\InputStream {
+class ZipFileInputStream implements \io\streams\InputStream {
   protected 
     $reader      = null,
     $start       = 0,

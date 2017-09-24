@@ -10,7 +10,7 @@ use security\checksum\CRC32;
  * @see      xp://io.archive.zip.ZipArchiveWriter#addFile
  * @purpose  Stream
  */
-class ZipFileOutputStream extends \lang\Object implements OutputStream {
+class ZipFileOutputStream implements OutputStream {
   protected
     $writer      = null,
     $compression = null,
@@ -31,7 +31,7 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
     $this->file= $file;
     $this->name= $name;
     $this->data= null;
-    $this->md= CRC32::digest();
+    $this->md= hash_init('crc32b');
   }
   
   /**
@@ -54,7 +54,7 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
    */
   public function write($arg) {
     $this->size+= strlen($arg);
-    $this->md->update($arg);
+    hash_update($this->md, $arg);
     $this->compression->write($arg);
   }
 
@@ -72,6 +72,11 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
    */
   public function close() {
     if (null === $this->data) return;     // Already written
+
+    $crc32= hexdec(hash_final($this->md));
+    if ($crc32 > 2147483647) {      // Convert from uint32 to int32
+      $crc32= intval($crc32 - 4294967296);
+    }
     
     $this->compression->close();
     $bytes= $this->data->getBytes();
@@ -80,7 +85,7 @@ class ZipFileOutputStream extends \lang\Object implements OutputStream {
       $this->name,
       $this->size, 
       strlen($bytes),
-      (new CRC32($this->md->digest()))->asInt32(),
+      $crc32,
       0
     );
     $this->writer->streamWrite($bytes);

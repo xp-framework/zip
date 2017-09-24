@@ -3,6 +3,12 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 8.0.0 / 2017-09-24
+
+* **Heads up**: Dropped PHP 5.5 support - @thekid
+* Added compatibility with XP 9.0+ - @thekid
+* Dropped dependency on `xp-framework/security` library - @thekid
+
 ## 7.1.0 / 2016-08-29
 
 * Added forward compatibility with XP 8.0.0: Use File::in() instead of

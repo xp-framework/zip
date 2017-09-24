@@ -43,7 +43,7 @@ use io\streams\InputStream;
  * @test     xp://net.xp_framework.unittest.io.archive.ZipFileTest
  * @see      http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  */
-abstract class ZipFile extends \lang\Object {
+abstract class ZipFile {
   
   /**
    * Creation constructor

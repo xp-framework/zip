@@ -8,7 +8,7 @@ use math\BigInt;
  * @test     xp://net.xp_framework.unittest.io.archive.vendors.SevenZipFileTest
  * @see      http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  */
-class ZipCipher extends \lang\Object {
+class ZipCipher {
   protected $keys= null;
 
   // Calculated by Vbaccelerator.Components.Algorithms.CRC32 class seen at

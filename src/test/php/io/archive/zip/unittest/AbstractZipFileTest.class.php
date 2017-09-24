@@ -36,7 +36,7 @@ abstract class AbstractZipFileTest extends \unittest\TestCase {
    * @return  io.archive.zip.ZipArchiveReader
    */
   protected function archiveReaderFor($package, $name) {
-    return ZipFile::open($this->getClass()
+    return ZipFile::open(typeof($this)
       ->getPackage()
       ->getPackage($package)
       ->getResourceAsStream($name.'.zip')

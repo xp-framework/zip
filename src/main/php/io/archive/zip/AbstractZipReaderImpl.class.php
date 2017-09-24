@@ -10,7 +10,7 @@ use lang\IllegalArgumentException;
  *
  * @ext   iconv
  */
-abstract class AbstractZipReaderImpl extends \lang\Object {
+abstract class AbstractZipReaderImpl {
   public $skip= 0;
 
   protected $stream= null;

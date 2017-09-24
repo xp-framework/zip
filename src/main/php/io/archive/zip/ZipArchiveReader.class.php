@@ -28,7 +28,7 @@
  * @test    xp://net.xp_framework.unittest.io.archive.ZipFileIteratorTest
  * @see     xp://io.archive.zip.ZipArchive#open
  */
-class ZipArchiveReader extends \lang\Object {
+class ZipArchiveReader {
   protected $impl= NULL;
 
   /**

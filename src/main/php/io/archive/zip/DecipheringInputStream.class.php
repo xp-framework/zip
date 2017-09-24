@@ -7,7 +7,7 @@ use io\streams\InputStream;
  *
  * @see   xp://io.archive.zip.ZipCipher
  */
-class DecipheringInputStream extends \lang\Object implements InputStream {
+class DecipheringInputStream implements InputStream {
   protected $in= null;
   protected $cipher= null;
 

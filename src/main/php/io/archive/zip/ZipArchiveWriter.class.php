@@ -10,7 +10,7 @@ use lang\IllegalArgumentException;
  * @see   xp://io.archive.zip.ZipArchive#create
  * @test  xp://io.archive.zip.unittest.ZipArchiveWriterTest
  */
-class ZipArchiveWriter extends \lang\Object {
+class ZipArchiveWriter {
   protected
     $stream   = null,
     $dir      = [], 

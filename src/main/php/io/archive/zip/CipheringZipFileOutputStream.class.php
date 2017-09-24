@@ -2,14 +2,13 @@
 
 use io\streams\OutputStream;
 use io\streams\MemoryOutputStream;
-use security\checksum\CRC32;
 
 /**
  * Output stream for files
  *
  * @see   xp://io.archive.zip.ZipArchiveWriter#addFile
  */
-class CipheringZipFileOutputStream extends \lang\Object implements OutputStream {
+class CipheringZipFileOutputStream implements OutputStream {
   protected
     $writer      = null,
     $compression = null,
@@ -33,7 +32,7 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
     $this->file= $file;
     $this->name= $name;
     $this->data= null;
-    $this->md= CRC32::digest();
+    $this->md= hash_init('crc32b');
     $this->cipher= $cipher;
   }
   
@@ -57,7 +56,7 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
    */
   public function write($arg) {
     $this->size+= strlen($arg);
-    $this->md->update($arg);
+    hash_update($this->md, $arg);
     $this->data->write($arg);
   }
 
@@ -77,7 +76,10 @@ class CipheringZipFileOutputStream extends \lang\Object implements OutputStream 
     if (null === $this->data) return;     // Already written
 
     // Calculate CRC32
-    $crc32= (new CRC32($this->md->digest()))->asInt32();
+    $crc32= hexdec(hash_final($this->md));
+    if ($crc32 > 2147483647) {      // Convert from uint32 to int32
+      $crc32= intval($crc32 - 4294967296);
+    }
 
     // Create random bytes
     $rand= '';

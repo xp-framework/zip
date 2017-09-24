@@ -9,7 +9,7 @@ use util\Date;
  * @see      xp://io.archive.zip.ZipEntry
  * @purpose  Interface
  */
-class ZipFileEntry extends \lang\Object implements ZipEntry {
+class ZipFileEntry implements ZipEntry {
   protected 
     $name         = '',
     $size         = 0,
