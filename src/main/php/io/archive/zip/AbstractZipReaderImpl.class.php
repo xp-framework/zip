@@ -1,9 +1,9 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use util\Date;
 use lang\FormatException;
 use lang\IllegalArgumentException;
+use util\Date;
 
 /**
  * Abstract base class for zip reader implementations
@@ -231,8 +231,8 @@ abstract class AbstractZipReaderImpl {
           $preamble= $cipher->decipher($this->streamRead(12));
           
           // Verify            
-          if (ord($preamble{11}) !== (($header['crc'] >> 24) & 0xFF)) {
-            throw new IllegalArgumentException('The password did not match ('.ord($preamble{11}).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
+          if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xFF)) {
+            throw new IllegalArgumentException('The password did not match ('.ord($preamble[11]).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
           }
           
           // Password matches.

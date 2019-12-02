@@ -63,7 +63,7 @@ class ZipCipher {
   /**
    * Constructor.
    *
-   * @param   io.archive.zip.ZipCipher copy if passed, creates this as a copy
+   * @param  io.archive.zip.ZipCipher $copy if passed, creates this as a copy
    */
   public function __construct($copy= null) {
     if (null === $copy) {
@@ -97,7 +97,7 @@ class ZipCipher {
    */
   public function initialize($passphrase) {
     for ($i= 0, $s= strlen($passphrase); $i < $s; $i++) {
-      $this->updateKeys(ord($passphrase{$i}));
+      $this->updateKeys(ord($passphrase[$i]));
     }
   }
 
@@ -118,7 +118,7 @@ class ZipCipher {
   public function decipher($chunk) {
     $plain= '';
     for ($i= 0, $s= strlen($chunk); $i < $s; $i++) {
-      $c= ord($chunk{$i}) ^ $this->magicByte();
+      $c= ord($chunk[$i]) ^ $this->magicByte();
       $this->updateKeys($c);
       $plain.= chr($c);
     }
@@ -134,7 +134,7 @@ class ZipCipher {
   public function cipher($plain) {
     $result= '';
     for ($i= 0, $s= strlen($plain); $i < $s; $i++) {
-      $c= ord($plain{$i});
+      $c= ord($plain[$i]);
       $result.= chr($c ^ $this->magicByte());
       $this->updateKeys($c);
     }
