@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip;
 
 use util\Date;
+use util\Objects;
 
 /**
  * Represents a file entry in a zip archive
@@ -165,8 +166,8 @@ class ZipFileEntry implements ZipEntry {
       "}",
       nameof($this),
       $this->name,
-      \xp::stringOf($this->mod),
-      \xp::stringOf($this->compression[0]),
+      Objects::stringOf($this->mod),
+      Objects::stringOf($this->compression[0]),
       $this->compression[1],
       $this->size
     );

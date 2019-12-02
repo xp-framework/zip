@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip;
 
 use util\Date;
+use util\Objects;
 
 /**
  * Represents a Dir entry in a zip archive
@@ -119,7 +120,7 @@ class ZipDirEntry implements ZipEntry {
       "}",
       nameof($this),
       $this->name,
-      \xp::stringOf($this->mod)
+      Objects::stringOf($this->mod)
     );
   }
 }
