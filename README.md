@@ -12,9 +12,7 @@ Usage (creating a zip file)
 ---------------------------
 
 ```php
-use io\archive\zip\ZipFile;
-use io\archive\zip\ZipDirEntry;
-use io\archive\zip\ZipFileEntry;
+use io\archive\zip\{ZipFile, ZipDirEntry, ZipFileEntry};
 use io\File;
 
 $z= ZipFile::create((new File('dist.zip'))->out());
