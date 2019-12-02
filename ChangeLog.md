@@ -3,6 +3,11 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 8.0.1 / 2019-12-02
+
+* Made compatible with XP 10 - @thekid
+* Replaced xp::stringOf() with util.Objects::stringOf() - @thekid
+
 ## 8.0.0 / 2017-09-24
 
 * **Heads up**: Dropped PHP 5.5 support - @thekid
