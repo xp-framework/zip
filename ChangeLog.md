@@ -3,6 +3,11 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 8.0.2 / 2020-04-05
+
+* Implemented RFC #335: Remove deprecated key/value pair annotation syntax
+  (@thekid)
+
 ## 8.0.1 / 2019-12-02
 
 * Made compatible with XP 10 - @thekid
