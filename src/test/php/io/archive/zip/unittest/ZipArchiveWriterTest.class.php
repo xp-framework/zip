@@ -1,11 +1,12 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\ZipFile;
 use io\archive\zip\ZipArchiveWriter;
-use io\archive\zip\ZipFileEntry;
 use io\archive\zip\ZipDirEntry;
-use io\streams\MemoryOutputStream;
+use io\archive\zip\ZipFile;
+use io\archive\zip\ZipFileEntry;
 use io\streams\MemoryInputStream;
+use io\streams\MemoryOutputStream;
+use lang\IllegalArgumentException;
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {
   protected $out, $fixture;
@@ -93,13 +94,13 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out, 'secret'));
   }
 
-  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Filename too long (65536)')]
+  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
   public function cannot_add_files_with_names_longer_than_65535_characters() {
     $this->fixture= ZipFile::create(new MemoryOutputStream());
     $this->fixture->addFile(new ZipFileEntry(str_repeat('n', 65535 + 1)));
   }
 
-  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Filename too long (65536)')]
+  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
   public function cannot_add_dirs_with_names_longer_than_65535_characters() {
     $this->fixture= ZipFile::create(new MemoryOutputStream());
     $this->fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
