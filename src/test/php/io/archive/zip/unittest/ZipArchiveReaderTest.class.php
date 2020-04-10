@@ -11,12 +11,12 @@ class ZipArchiveReaderTest extends AbstractZipFileTest {
 
   #[@test]
   public function close() {
-    $stream= newinstance(InputStream::class, [], '{
-      public $closed= FALSE;
-      public function read($limit= 8192) { return ""; }
+    $stream= new class() implements InputStream {
+      public $closed= false;
+      public function read($limit= 8192) { return ''; }
       public function available() { return 0; }
-      public function close() { $this->closed= TRUE; }
-    }');
+      public function close() { $this->closed= true; }
+    };
     $reader= new \io\archive\zip\ZipArchiveReader($stream);
     $reader->close();
     $this->assertTrue($stream->closed);
