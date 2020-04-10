@@ -1,10 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\ZipArchiveWriter;
-use io\archive\zip\ZipArchiveReader;
-use io\archive\zip\ZipFile;
-use io\streams\MemoryOutputStream;
-use io\streams\MemoryInputStream;
+use io\archive\zip\{ZipArchiveReader, ZipArchiveWriter, ZipFile};
+use io\streams\{MemoryInputStream, MemoryOutputStream};
 
 class ZipFileTest extends AbstractZipFileTest {
 

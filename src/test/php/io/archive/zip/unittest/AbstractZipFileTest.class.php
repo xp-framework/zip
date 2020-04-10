@@ -1,8 +1,6 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\ZipFile;
-use io\archive\zip\ZipEntry;
-use io\archive\zip\ZipArchiveReader;
+use io\archive\zip\{ZipArchiveReader, ZipEntry, ZipFile};
 use io\streams\Streams;
 
 /**

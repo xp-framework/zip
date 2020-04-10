@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip;
 
-use io\streams\Seekable;
-use io\streams\InputStream;
+use io\streams\{InputStream, Seekable};
 use lang\FormatException;
 
 /**

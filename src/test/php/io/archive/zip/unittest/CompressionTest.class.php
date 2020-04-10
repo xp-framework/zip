@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
-use lang\IllegalArgumentException;
 use io\archive\zip\Compression;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for compression enumeration

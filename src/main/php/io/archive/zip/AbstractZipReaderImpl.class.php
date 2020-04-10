@@ -1,8 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use lang\FormatException;
-use lang\IllegalArgumentException;
+use lang\{FormatException, IllegalArgumentException};
 use util\Date;
 
 /**

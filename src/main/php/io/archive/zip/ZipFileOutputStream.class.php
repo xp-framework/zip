@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip;
 
-use io\streams\OutputStream;
-use io\streams\MemoryOutputStream;
+use io\streams\{MemoryOutputStream, OutputStream};
 use security\checksum\CRC32;
 
 /**

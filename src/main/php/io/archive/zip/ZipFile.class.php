@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip;
 
-use io\streams\OutputStream;
-use io\streams\InputStream;
+use io\streams\{InputStream, OutputStream};
 
 /**
  * Zip archives hanadling

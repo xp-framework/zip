@@ -1,11 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\ZipArchiveWriter;
-use io\archive\zip\ZipDirEntry;
-use io\archive\zip\ZipFile;
-use io\archive\zip\ZipFileEntry;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
+use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
+use io\streams\{MemoryInputStream, MemoryOutputStream};
 use lang\IllegalArgumentException;
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {

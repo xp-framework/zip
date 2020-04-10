@@ -1,8 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\Seekable;
-use lang\IllegalStateException;
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, IllegalStateException};
 
 /**
  * Zip archive reader that works on any input stream.

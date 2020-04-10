@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\ZipFileEntry;
-use io\archive\zip\ZipDirEntry;
+use io\archive\zip\{ZipDirEntry, ZipFileEntry};
 
 /**
  * TestCase

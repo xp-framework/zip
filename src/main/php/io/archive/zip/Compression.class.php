@@ -1,11 +1,7 @@
 <?php namespace io\archive\zip;
 
+use io\streams\{Bz2CompressingOutputStream, Bz2DecompressingInputStream, DeflatingOutputStream, InflatingInputStream, InputStream};
 use lang\Enum;
-use io\streams\InputStream;
-use io\streams\InflatingInputStream;
-use io\streams\DeflatingOutputStream;
-use io\streams\Bz2DecompressingInputStream;
-use io\streams\Bz2CompressingOutputStream;
 
 /**
  * Compression algorithm enumeration.

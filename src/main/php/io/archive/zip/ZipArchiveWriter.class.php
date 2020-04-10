@@ -1,8 +1,8 @@
 <?php namespace io\archive\zip;
 
 use io\streams\OutputStream;
-use util\Date;
 use lang\IllegalArgumentException;
+use util\Date;
 
 /**
  * Writes to a ZIP archive

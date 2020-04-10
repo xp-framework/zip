@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip;
 
-use util\Date;
-use util\Objects;
+use util\{Date, Objects};
 
 /**
  * Represents a Dir entry in a zip archive
