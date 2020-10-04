@@ -1,5 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
+use unittest\{Ignore, Test};
+
 /**
  * Tests ZIP file implementation with ZIP files created by
  * WinRAR
@@ -15,7 +17,7 @@ class WinRARZipFileTest extends ZipFileVendorTest {
    * Tests reading an empty zipfile
    *
    */
-  #[@test, @ignore('Cannot create empty zipfiles with WinRAR')]
+  #[Test, Ignore('Cannot create empty zipfiles with WinRAR')]
   public function emptyZipFile() {
     parent::emptyZipFile();
   }

@@ -1,23 +1,19 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-/**
- * Abstract base class
- */
-abstract class ZipFileVendorTest extends \io\archive\zip\unittest\AbstractZipFileTest {
+use io\archive\zip\unittest\AbstractZipFileTest;
+use unittest\Test;
+
+abstract class ZipFileVendorTest extends AbstractZipFileTest {
   
-  /**
-   * Returns vendor name
-   *
-   * @return  string
-   */
+  /** @return string */
   protected abstract function vendor();
   
-  #[@test]
+  #[Test]
   public function emptyZipFile() {
     $this->assertEquals([], $this->entriesIn($this->archiveReaderFor($this->vendor(), 'empty')));
   }
 
-  #[@test]
+  #[Test]
   public function helloZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor(), 'hello'));
     $this->assertEquals(1, sizeof($entries));
@@ -26,7 +22,7 @@ abstract class ZipFileVendorTest extends \io\archive\zip\unittest\AbstractZipFil
     $this->assertFalse($entries[0]->isDirectory());
   }
 
-  #[@test]
+  #[Test]
   public function umlautZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor(), 'umlaut'));
     $this->assertEquals(1, sizeof($entries));

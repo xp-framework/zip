@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\streams\Streams;
+use unittest\Test;
 
 /**
  * Base class for testing zip file contents
@@ -18,7 +19,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
    */
   protected abstract function entriesWithContentIn(\io\archive\zip\ZipArchiveReader $zip);
 
-  #[@test]
+  #[Test]
   public function nofiles() {
     $this->assertEquals(
       [],
@@ -26,7 +27,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function onefile() {
     $this->assertEquals(
       ['hello.txt' => 'World'],
@@ -34,7 +35,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function onedir() {
     $this->assertEquals(
       ['dir/' => null],
@@ -42,7 +43,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function twofiles() {
     $this->assertEquals(
       ['one.txt' => 'Eins', 'two.txt' => 'Zwei'],
@@ -50,7 +51,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function loadContentAfterIteration() {
     $entries= $this->entriesIn($this->archiveReaderFor('fixtures', 'twofiles'));
     $this->assertEquals('Eins', $this->entryContent($entries[0]));

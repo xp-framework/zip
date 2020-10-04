@@ -2,6 +2,8 @@
 
 use io\archive\zip\{ZipArchiveReader, ZipEntry, ZipFile};
 use io\streams\Streams;
+use unittest\TestCase;
+use unittest\actions\ExtensionAvailable;
 
 /**
  * Base class for testing zip files
@@ -9,8 +11,8 @@ use io\streams\Streams;
  * @see   xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
  * @see   xp://net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
  */
-#[@action(new \unittest\actions\ExtensionAvailable('zlib'))]
-abstract class AbstractZipFileTest extends \unittest\TestCase {
+#[Action(eval: 'new ExtensionAvailable("zlib")')]
+abstract class AbstractZipFileTest extends TestCase {
 
   /**
    * Returns entry content; or NULL for directories

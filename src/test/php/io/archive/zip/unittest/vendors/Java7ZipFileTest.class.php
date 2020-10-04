@@ -1,5 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
+use unittest\{Ignore, Test};
+
 /**
  * Tests ZIP file implementation with ZIP files created by
  * Java 7's java.util.zip API
@@ -14,7 +16,7 @@ class Java7ZipFileTest extends ZipFileVendorTest {
   /** @return string */
   protected function vendor() { return 'java7'; }
 
-  #[@test, @ignore('Cannot create empty zipfiles with java.util.zip')]
+  #[Test, Ignore('Cannot create empty zipfiles with java.util.zip')]
   public function emptyZipFile() {
     parent::emptyZipFile();
   }

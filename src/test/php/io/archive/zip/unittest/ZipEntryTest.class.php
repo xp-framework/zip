@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\{ZipDirEntry, ZipFileEntry};
+use unittest\Test;
 
 /**
  * TestCase
@@ -10,52 +11,52 @@ use io\archive\zip\{ZipDirEntry, ZipFileEntry};
  */
 class ZipEntryTest extends AbstractZipFileTest {
 
-  #[@test]
+  #[Test]
   public function simpleFileName() {
     $this->assertEquals('Hello.txt', (new ZipFileEntry('Hello.txt'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function simpleDirName() {
     $this->assertEquals('Hello/', (new ZipDirEntry('Hello'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function backslashesReplacedInFile() {
     $this->assertEquals('hello/World.txt', (new ZipFileEntry('hello\\World.txt'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function backslashesReplacedInDir() {
     $this->assertEquals('hello/World/', (new ZipDirEntry('hello\\World'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function trailingSlashesInDirNormalized() {
     $this->assertEquals('hello/', (new ZipDirEntry('hello//'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function trailingBackslashesInDirNormalized() {
     $this->assertEquals('hello/', (new ZipDirEntry('hello\\\\'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function composeFileFromString() {
     $this->assertEquals('META-INF/manifest.ini', (new ZipFileEntry('META-INF', 'manifest.ini'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function composeDirFromString() {
     $this->assertEquals('META-INF/services/', (new ZipDirEntry('META-INF', 'services'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function composeFileFromDirAndString() {
     $this->assertEquals('META-INF/manifest.ini', (new ZipFileEntry(new ZipDirEntry('META-INF'), 'manifest.ini'))->getName());
   }
 
-  #[@test]
+  #[Test]
   public function composeDirFromDirAndString() {
     $this->assertEquals('META-INF/services/', (new ZipDirEntry(new ZipDirEntry('META-INF'), 'services'))->getName());
   }

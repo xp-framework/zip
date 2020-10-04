@@ -3,6 +3,7 @@
 use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
 use io\streams\{MemoryInputStream, MemoryOutputStream};
 use lang\IllegalArgumentException;
+use unittest\{Expect, Test};
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {
   protected $out, $fixture;
@@ -34,7 +35,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     return $entries;
   }
 
-  #[@test]
+  #[Test]
   public function adding_a_file_via_addFile() {
     $this->fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $this->fixture->close();
@@ -42,7 +43,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out));
   }
 
-  #[@test]
+  #[Test]
   public function adding_a_file_via_add() {
     $this->fixture->add(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $this->fixture->close();
@@ -50,7 +51,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out));
   }
 
-  #[@test]
+  #[Test]
   public function adding_a_dir_via_addDir() {
     $this->fixture->addDir(new ZipDirEntry('test'));
     $this->fixture->close();
@@ -58,7 +59,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test/' => null], $this->entriesWithContentIn($this->out));
   }
 
-  #[@test]
+  #[Test]
   public function adding_a_dir_via_add() {
     $this->fixture->add(new ZipDirEntry('test'));
     $this->fixture->close();
@@ -66,7 +67,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test/' => null], $this->entriesWithContentIn($this->out));
   }
 
-  #[@test]
+  #[Test]
   public function adding_files_and_dir() {
     $dir= $this->fixture->addDir(new ZipDirEntry('test/'));
     $this->fixture->addFile(new ZipFileEntry($dir, '1.txt'))->out()->write('File #1');
@@ -79,7 +80,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function using_password_protection() {
     $this->out= new MemoryOutputStream();
 
@@ -90,19 +91,19 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out, 'secret'));
   }
 
-  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
+  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
   public function cannot_add_files_with_names_longer_than_65535_characters() {
     $this->fixture= ZipFile::create(new MemoryOutputStream());
     $this->fixture->addFile(new ZipFileEntry(str_repeat('n', 65535 + 1)));
   }
 
-  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
+  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
   public function cannot_add_dirs_with_names_longer_than_65535_characters() {
     $this->fixture= ZipFile::create(new MemoryOutputStream());
     $this->fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
   }
 
-  #[@test]
+  #[Test]
   public function using_unicode_names() {
     $this->out= new MemoryOutputStream();
 

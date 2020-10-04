@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
+use unittest\Test;
 
 /**
  * Tests our own ZIP file implementation.
@@ -12,7 +13,7 @@ class XpZipFileTest extends ZipFileVendorTest {
   /** @return string */
   protected function vendor() { return 'xp'; }
 
-  #[@test]
+  #[Test]
   public function unicodeZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor(), 'unicode'));
     $this->assertEquals(1, sizeof($entries));
@@ -41,7 +42,7 @@ class XpZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  #[@test]
+  #[Test]
   public function zipCryptoPasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'zip-crypto'));
   }

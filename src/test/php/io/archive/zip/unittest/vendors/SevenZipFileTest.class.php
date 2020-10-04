@@ -2,6 +2,7 @@
 
 use io\streams\Streams;
 use unittest\actions\ExtensionAvailable;
+use unittest\{Action, Ignore, Test};
 
 /**
  * Tests 7-ZIP archives
@@ -31,27 +32,27 @@ class SevenZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  #[@test, @action(new ExtensionAvailable('zlib'))]
+  #[Test, Action(eval: 'new ExtensionAvailable("zlib")')]
   public function deflate() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'deflate'));
   }
 
-  #[@test, @action(new ExtensionAvailable('bz2'))]
+  #[Test, Action(eval: 'new ExtensionAvailable("bz2")')]
   public function bzip2() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'bzip2'));
   }
 
-  #[@test, @ignore('Not yet supported')]
+  #[Test, Ignore('Not yet supported')]
   public function deflate64() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'deflate64'));
   }
 
-  #[@test, @ignore('Not yet supported')]
+  #[Test, Ignore('Not yet supported')]
   public function lzma() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'lzma'));
   }
 
-  #[@test, @ignore('Not yet supported')]
+  #[Test, Ignore('Not yet supported')]
   public function ppmd() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'ppmd'));
   }
@@ -76,12 +77,12 @@ class SevenZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  #[@test]
+  #[Test]
   public function zipCryptoPasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'zip-crypto'));
   }
 
-  #[@test, @ignore('Not yet supported')]
+  #[Test, Ignore('Not yet supported')]
   public function aes256PasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'aes-256'));
   }
