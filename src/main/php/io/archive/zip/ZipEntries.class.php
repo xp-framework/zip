@@ -1,11 +1,13 @@
 <?php namespace io\archive\zip;
 
+use Iterator, ReturnTypeWillChange;
+
 /**
  * Iterates on ZIP archive entries
  *
  * @test    xp://net.xp_framework.unittest.io.archive.ZipFileEntriesTest
  */
-class ZipEntries implements \Iterator {
+class ZipEntries implements Iterator {
   protected $impl= null;
   protected $entry= null;
   protected $offset= 0;
@@ -25,6 +27,7 @@ class ZipEntries implements \Iterator {
    *
    * @return  io.archive.zip.ZipEntry
    */
+  #[ReturnTypeWillChange]
   public function current() { 
     return $this->entry;
   }
@@ -34,6 +37,7 @@ class ZipEntries implements \Iterator {
    *
    * @return  int
    */
+  #[ReturnTypeWillChange]
   public function key() { 
     return $this->offset; 
   }
@@ -42,6 +46,7 @@ class ZipEntries implements \Iterator {
    * Goes to next
    *
    */
+  #[ReturnTypeWillChange]
   public function next() { 
     $this->entry= $this->impl->nextEntry();
     $this->offset++;
@@ -51,6 +56,7 @@ class ZipEntries implements \Iterator {
    * Rewinds
    *
    */
+  #[ReturnTypeWillChange]
   public function rewind() { 
     $this->entry= $this->impl->firstEntry();
     $this->offset= 0;
@@ -61,6 +67,7 @@ class ZipEntries implements \Iterator {
    *
    * @return  bool
    */
+  #[ReturnTypeWillChange]
   public function valid() { 
     return null !== $this->entry; 
   }
