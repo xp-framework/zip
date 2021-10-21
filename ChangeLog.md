@@ -5,6 +5,9 @@ ZIP File support for the XP Framework ChangeLog
 
 ## 10.0.0 / 2021-10-21
 
+* Made `ZipFile::create()` and `ZipFile::open()` accept file names, 
+  `io.Channel` instances as well as in- and output streams
+  (@thekid)
 * Implemented xp-framework/rfc#341, dropping compatibility with XP 9
   (@thekid)
 

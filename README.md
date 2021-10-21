@@ -15,7 +15,7 @@ Usage (creating a zip file)
 use io\archive\zip\{ZipFile, ZipDirEntry, ZipFileEntry};
 use io\File;
 
-$z= ZipFile::create((new File('dist.zip'))->out());
+$z= ZipFile::create(new File('dist.zip'));
 
 // Add a directory
 $dir= $z->add(new ZipDirEntry('META-INF'));
@@ -36,7 +36,7 @@ use io\archive\zip\ZipFile;
 use io\streams\Streams;
 use io\File;
 
-$z= ZipFile::open((new File('dist.zip'))->in());
+$z= ZipFile::open(new File('dist.zip'));
 foreach ($z->entries() as $entry) {
   if ($entry->isDirectory()) {
     // Create dir

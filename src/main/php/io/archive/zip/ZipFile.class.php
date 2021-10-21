@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip;
 
-use io\streams\{InputStream, OutputStream};
+use io\Channel;
+use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
 
 /**
  * Zip archives hanadling
@@ -47,20 +48,32 @@ abstract class ZipFile {
   /**
    * Creation constructor
    *
-   * @param   io.streams.OutputStream stream
+   * @param   string|io.Channel|io.streams.OutputStream $arg
    * @return  io.archive.zip.ZipArchiveWriter
    */
-  public static function create(OutputStream $stream) {
-    return new ZipArchiveWriter($stream);
+  public static function create($arg) {
+    if ($arg instanceof Channel) {
+      return new ZipArchiveWriter($arg->out());
+    } else if ($arg instanceof OutputStream) {
+      return new ZipArchiveWriter($arg);
+    } else {
+      return new ZipArchiveWriter(new FileOutputStream($arg));
+    }
   }
 
   /**
    * Read constructor
    *
-   * @param   io.streams.InputStream stream
+   * @param   string|io.Channel|io.streams.InputStream $arg
    * @return  io.archive.zip.ZipArchiveReader
    */
-  public static function open(InputStream $stream) {
-    return new ZipArchiveReader($stream);
+  public static function open($arg) {
+    if ($arg instanceof Channel) {
+      return new ZipArchiveReader($arg->in());
+    } else if ($arg instanceof InputStream) {
+      return new ZipArchiveReader($arg);
+    } else {
+      return new ZipArchiveReader(new FileInputStream($arg));
+    }
   }   
 }
