@@ -142,7 +142,7 @@ abstract class AbstractZipReaderImpl {
     \xp::gc(__FILE__);
     foreach ($charsets as $charset => $target) {
       $decoded= iconv($charset, $target, $name);
-      if (!\xp::errorAt(__FILE__, __LINE__ - 1)) {
+      if (false !== $decoded) {
         return $target === \xp::ENCODING ? $decoded : iconv($target, \xp::ENCODING, $decoded);
       }
       \xp::gc(__FILE__);   // Clean up and try next charset
