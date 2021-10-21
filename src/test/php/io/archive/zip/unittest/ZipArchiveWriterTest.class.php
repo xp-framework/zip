@@ -26,7 +26,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
    * @return  [:string] content
    */
   protected function entriesWithContentIn($out, $password= null) {
-    $zip= ZipFile::open(new MemoryInputStream($out->getBytes()))->usingPassword($password);
+    $zip= ZipFile::open(new MemoryInputStream($out->bytes()))->usingPassword($password);
 
     $entries= [];
     foreach ($zip->entries() as $entry) {

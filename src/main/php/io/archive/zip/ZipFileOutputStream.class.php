@@ -78,7 +78,7 @@ class ZipFileOutputStream implements OutputStream {
     }
     
     $this->compression->close();
-    $bytes= $this->data->getBytes();
+    $bytes= $this->data->bytes();
     $this->writer->writeFile(
       $this->file,
       $this->name,

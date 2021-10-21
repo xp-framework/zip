@@ -90,8 +90,8 @@ class CipheringZipFileOutputStream implements OutputStream {
     // Now cipher and the compress raw bytes
     $compressed= new MemoryOutputStream();
     $compression= $this->compression[0]->getCompressionStream($compressed, $this->compression[1]);
-    $compression->write($this->cipher->cipher($this->data->getBytes()));
-    $bytes= $compressed->getBytes();
+    $compression->write($this->cipher->cipher($this->data->bytes()));
+    $bytes= $compressed->bytes();
     
     // Finally, write header, preamble and bytes
     $this->writer->writeFile(

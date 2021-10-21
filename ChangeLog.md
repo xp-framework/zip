@@ -3,6 +3,11 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.0 / 2021-10-21
+
+* Implemented xp-framework/rfc#341, dropping compatibility with XP 9
+  (@thekid)
+
 ## 9.0.1 / 2021-10-21
 
 * Made compatible with PHP 8.1 - add `ReturnTypeWillChange` attributes to
