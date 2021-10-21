@@ -3,6 +3,14 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.0.1 / 2021-10-21
+
+* Made compatible with PHP 8.1 - add `ReturnTypeWillChange` attributes to
+  iterator, see https://wiki.php.net/rfc/internal_method_return_types
+* Replaced xp::errorAt() call with a less-expensive check on iconv() return
+  value. See xp-framework/core#299
+  (@thekid)
+
 ## 9.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:
