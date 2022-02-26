@@ -8,15 +8,10 @@ use io\streams\{MemoryOutputStream, OutputStream};
  * @see   xp://io.archive.zip.ZipArchiveWriter#addFile
  */
 class CipheringZipFileOutputStream implements OutputStream {
-  protected
-    $writer      = null,
-    $compression = null,
-    $data        = null,
-    $name        = null,
-    $size        = 0,
-    $md          = null;
-    
-  protected $cipher= null;
+  protected $writer, $file, $name, $md, $cipher;
+  protected $compression= null;
+  protected $data= null;
+  protected $size= 0;
   
   /**
    * Constructor
@@ -30,7 +25,6 @@ class CipheringZipFileOutputStream implements OutputStream {
     $this->writer= $writer;
     $this->file= $file;
     $this->name= $name;
-    $this->data= null;
     $this->md= hash_init('crc32b');
     $this->cipher= $cipher;
   }

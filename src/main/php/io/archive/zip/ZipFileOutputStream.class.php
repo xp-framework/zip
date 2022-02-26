@@ -1,7 +1,6 @@
 <?php namespace io\archive\zip;
 
 use io\streams\{MemoryOutputStream, OutputStream};
-use security\checksum\CRC32;
 
 /**
  * Output stream for files
@@ -10,13 +9,10 @@ use security\checksum\CRC32;
  * @purpose  Stream
  */
 class ZipFileOutputStream implements OutputStream {
-  protected
-    $writer      = null,
-    $compression = null,
-    $data        = null,
-    $name        = null,
-    $size        = 0,
-    $md          = null;
+  protected $writer, $file, $name, $md;
+  protected $compression= null;
+  protected $data= null;
+  protected $size= 0;
   
   /**
    * Constructor
@@ -29,7 +25,6 @@ class ZipFileOutputStream implements OutputStream {
     $this->writer= $writer;
     $this->file= $file;
     $this->name= $name;
-    $this->data= null;
     $this->md= hash_init('crc32b');
   }
   
