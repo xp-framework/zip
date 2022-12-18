@@ -3,25 +3,14 @@
 use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
 use io\streams\{MemoryInputStream, MemoryOutputStream};
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {
-  protected $out, $fixture;
-
-  /**
-   * Creates fixture and output stream.
-   *
-   * @return void
-   */
-  public function setUp() {
-    $this->out= new MemoryOutputStream();
-    $this->fixture= new ZipArchiveWriter($this->out);
-  }
 
   /**
    * Returns an array of entries in a given zip file
    *
-   * @param   io.streams.MemoryOutputStream $this->out
+   * @param   io.streams.MemoryOutputStream $out
    * @param   string $password
    * @return  [:string] content
    */
@@ -37,80 +26,94 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
 
   #[Test]
   public function adding_a_file_via_addFile() {
-    $this->fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
-    $this->fixture->close();
+    $out= new MemoryOutputStream();
 
-    $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out));
+    $fixture= new ZipArchiveWriter($out);
+    $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
+    $fixture->close();
+
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
   }
 
   #[Test]
   public function adding_a_file_via_add() {
-    $this->fixture->add(new ZipFileEntry('test.txt'))->out()->write('File contents');
-    $this->fixture->close();
+    $out= new MemoryOutputStream();
 
-    $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out));
+    $fixture= new ZipArchiveWriter($out);
+    $fixture->add(new ZipFileEntry('test.txt'))->out()->write('File contents');
+    $fixture->close();
+
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
   }
 
   #[Test]
   public function adding_a_dir_via_addDir() {
-    $this->fixture->addDir(new ZipDirEntry('test'));
-    $this->fixture->close();
+    $out= new MemoryOutputStream();
 
-    $this->assertEquals(['test/' => null], $this->entriesWithContentIn($this->out));
+    $fixture= new ZipArchiveWriter($out);
+    $fixture->addDir(new ZipDirEntry('test'));
+    $fixture->close();
+
+    Assert::equals(['test/' => null], $this->entriesWithContentIn($out));
   }
 
   #[Test]
   public function adding_a_dir_via_add() {
-    $this->fixture->add(new ZipDirEntry('test'));
-    $this->fixture->close();
+    $out= new MemoryOutputStream();
 
-    $this->assertEquals(['test/' => null], $this->entriesWithContentIn($this->out));
+    $fixture= new ZipArchiveWriter($out);
+    $fixture->add(new ZipDirEntry('test'));
+    $fixture->close();
+
+    Assert::equals(['test/' => null], $this->entriesWithContentIn($out));
   }
 
   #[Test]
   public function adding_files_and_dir() {
-    $dir= $this->fixture->addDir(new ZipDirEntry('test/'));
-    $this->fixture->addFile(new ZipFileEntry($dir, '1.txt'))->out()->write('File #1');
-    $this->fixture->addFile(new ZipFileEntry($dir, '2.txt'))->out()->write('File #2');
-    $this->fixture->close();
+    $out= new MemoryOutputStream();
+    $fixture= new ZipArchiveWriter($out);
+    $dir= $fixture->addDir(new ZipDirEntry('test/'));
+    $fixture->addFile(new ZipFileEntry($dir, '1.txt'))->out()->write('File #1');
+    $fixture->addFile(new ZipFileEntry($dir, '2.txt'))->out()->write('File #2');
+    $fixture->close();
 
-    $this->assertEquals(
+    Assert::equals(
       ['test/' => null, 'test/1.txt' => 'File #1', 'test/2.txt' => 'File #2'],
-      $this->entriesWithContentIn($this->out)
+      $this->entriesWithContentIn($out)
     );
   }
 
   #[Test]
   public function using_password_protection() {
-    $this->out= new MemoryOutputStream();
+    $out= new MemoryOutputStream();
 
-    $this->fixture= ZipFile::create($this->out)->usingPassword('secret');
-    $this->fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
-    $this->fixture->close();
+    $fixture= ZipFile::create($out)->usingPassword('secret');
+    $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
+    $fixture->close();
 
-    $this->assertEquals(['test.txt' => 'File contents'], $this->entriesWithContentIn($this->out, 'secret'));
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: 'Filename too long (65536)')]
   public function cannot_add_files_with_names_longer_than_65535_characters() {
-    $this->fixture= ZipFile::create(new MemoryOutputStream());
-    $this->fixture->addFile(new ZipFileEntry(str_repeat('n', 65535 + 1)));
+    $fixture= ZipFile::create(new MemoryOutputStream());
+    $fixture->addFile(new ZipFileEntry(str_repeat('n', 65535 + 1)));
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Filename too long (65536)'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: 'Filename too long (65536)')]
   public function cannot_add_dirs_with_names_longer_than_65535_characters() {
-    $this->fixture= ZipFile::create(new MemoryOutputStream());
-    $this->fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
+    $fixture= ZipFile::create(new MemoryOutputStream());
+    $fixture->addDir(new ZipDirEntry(str_repeat('n', 65535).'/'));
   }
 
   #[Test]
   public function using_unicode_names() {
-    $this->out= new MemoryOutputStream();
+    $out= new MemoryOutputStream();
 
-    $this->fixture= ZipFile::create($this->out)->usingUnicodeNames();
-    $this->fixture->addFile(new ZipFileEntry('関連事業調査.txt'))->out()->write('File contents');
-    $this->fixture->close();
+    $fixture= ZipFile::create($out)->usingUnicodeNames();
+    $fixture->addFile(new ZipFileEntry('関連事業調査.txt'))->out()->write('File contents');
+    $fixture->close();
 
-    $this->assertEquals(['関連事業調査.txt' => 'File contents'], $this->entriesWithContentIn($this->out, 'secret'));
+    Assert::equals(['関連事業調査.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
   }
 }

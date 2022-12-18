@@ -5,8 +5,7 @@ use io\streams\{MemoryOutputStream, OutputStream};
 /**
  * Output stream for files
  *
- * @see      xp://io.archive.zip.ZipArchiveWriter#addFile
- * @purpose  Stream
+ * @see   io.archive.zip.ZipArchiveWriter::addFile
  */
 class ZipFileOutputStream implements OutputStream {
   protected $writer, $file, $name, $md;
@@ -55,6 +54,7 @@ class ZipFileOutputStream implements OutputStream {
   /**
    * Flush this buffer
    *
+   * @return void
    */
   public function flush() {
     // NOOP
@@ -63,6 +63,7 @@ class ZipFileOutputStream implements OutputStream {
   /**
    * Close this buffer
    *
+   * @return void
    */
   public function close() {
     if (null === $this->data) return;     // Already written

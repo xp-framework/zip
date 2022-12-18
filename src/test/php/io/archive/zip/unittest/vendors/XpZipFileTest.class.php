@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -16,10 +17,10 @@ class XpZipFileTest extends ZipFileVendorTest {
   #[Test]
   public function unicodeZip() {
     $entries= $this->entriesIn($this->archiveReaderFor($this->vendor(), 'unicode'));
-    $this->assertEquals(1, sizeof($entries));
-    $this->assertEquals(iconv('utf-8', \xp::ENCODING, 'äöü.txt'), $entries[0]->getName());
-    $this->assertEquals(0, $entries[0]->getSize());
-    $this->assertFalse($entries[0]->isDirectory());
+    Assert::equals(1, sizeof($entries));
+    Assert::equals(iconv('utf-8', \xp::ENCODING, 'äöü.txt'), $entries[0]->getName());
+    Assert::equals(0, $entries[0]->getSize());
+    Assert::false($entries[0]->isDirectory());
   }
 
   /**
@@ -31,14 +32,14 @@ class XpZipFileTest extends ZipFileVendorTest {
   protected function assertSecuredEntriesIn($reader) {
     with ($it= $reader->usingPassword('secret')->iterator()); {
       $entry= $it->next();
-      $this->assertEquals('password.txt', $entry->getName());
-      $this->assertEquals(15, $entry->getSize());
-      $this->assertEquals('Secret contents', (string)Streams::readAll($entry->in()));
+      Assert::equals('password.txt', $entry->getName());
+      Assert::equals(15, $entry->getSize());
+      Assert::equals('Secret contents', (string)Streams::readAll($entry->in()));
 
       $entry= $it->next();
-      $this->assertEquals('very.txt', $entry->getName());
-      $this->assertEquals(20, $entry->getSize());
-      $this->assertEquals('Very secret contents', (string)Streams::readAll($entry->in()));
+      Assert::equals('very.txt', $entry->getName());
+      Assert::equals(20, $entry->getSize());
+      Assert::equals('Very secret contents', (string)Streams::readAll($entry->in()));
     }
   }
 

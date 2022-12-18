@@ -1,7 +1,8 @@
 <?php namespace io\archive\zip\unittest;
 
+use io\archive\zip\ZipArchiveReader;
 use io\streams\Streams;
-use unittest\Test;
+use unittest\{Assert, Test};
 
 /**
  * Base class for testing zip file contents
@@ -17,11 +18,11 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
    * @param   io.archive.zip.ZipArchiveReader reader
    * @return  [:string] content
    */
-  protected abstract function entriesWithContentIn(\io\archive\zip\ZipArchiveReader $zip);
+  protected abstract function entriesWithContentIn(ZipArchiveReader $zip);
 
   #[Test]
   public function nofiles() {
-    $this->assertEquals(
+    Assert::equals(
       [],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'nofiles'))
     );
@@ -29,7 +30,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
 
   #[Test]
   public function onefile() {
-    $this->assertEquals(
+    Assert::equals(
       ['hello.txt' => 'World'],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'onefile'))
     );
@@ -37,7 +38,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
 
   #[Test]
   public function onedir() {
-    $this->assertEquals(
+    Assert::equals(
       ['dir/' => null],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'onedir'))
     );
@@ -45,7 +46,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
 
   #[Test]
   public function twofiles() {
-    $this->assertEquals(
+    Assert::equals(
       ['one.txt' => 'Eins', 'two.txt' => 'Zwei'],
       $this->entriesWithContentIn($this->archiveReaderFor('fixtures', 'twofiles'))
     );
@@ -54,7 +55,7 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   #[Test]
   public function loadContentAfterIteration() {
     $entries= $this->entriesIn($this->archiveReaderFor('fixtures', 'twofiles'));
-    $this->assertEquals('Eins', $this->entryContent($entries[0]));
-    $this->assertEquals('Zwei', $this->entryContent($entries[1]));
+    Assert::equals('Eins', $this->entryContent($entries[0]));
+    Assert::equals('Zwei', $this->entryContent($entries[1]));
   }
 }

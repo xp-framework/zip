@@ -1,13 +1,13 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipEntry;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 use util\NoSuchElementException;
 
 /**
  * Base class for testing zip file contents
  *
- * @see      xp://io.archive.zip.ZipArchiveReader#entries
+ * @see  io.archive.zip.ZipArchiveReader::entries
  */
 class ZipFileIteratorTest extends ZipFileContentsTest {
 
@@ -28,7 +28,7 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
 
   #[Test]
   public function emptyFilesHasNoEntries() {
-    $this->assertFalse($this->archiveReaderFor('fixtures', 'nofiles')->iterator()->hasNext());
+    Assert::false($this->archiveReaderFor('fixtures', 'nofiles')->iterator()->hasNext());
   }
 
   #[Test, Expect(NoSuchElementException::class)]
@@ -44,14 +44,14 @@ class ZipFileIteratorTest extends ZipFileContentsTest {
       $it->next();
       $this->fail('Expected exception not thrown', null, 'util.NoSuchElementException');
     } catch (NoSuchElementException $expected) { }
-    $this->assertFalse($it->hasNext());
+    Assert::false($it->hasNext());
   }
 
   #[Test]
   public function iterator() {
     $it= $this->archiveReaderFor('fixtures', 'onefile')->iterator();
-    $this->assertTrue($it->hasNext());
-    $this->assertInstanceOf(ZipEntry::class, $it->next());
-    $this->assertFalse($it->hasNext());
+    Assert::true($it->hasNext());
+    Assert::instance(ZipEntry::class, $it->next());
+    Assert::false($it->hasNext());
   }
 }

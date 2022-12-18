@@ -1,13 +1,9 @@
 <?php namespace io\archive\zip\unittest;
 
+use io\archive\zip\ZipArchiveReader;
 use io\streams\InputStream;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * Tests ZipArchiveReader class
- *
- * @see   xp://io.archive.zip.ZipArchiveReader
- */
 class ZipArchiveReaderTest extends AbstractZipFileTest {
 
   #[Test]
@@ -18,8 +14,8 @@ class ZipArchiveReaderTest extends AbstractZipFileTest {
       public function available() { return 0; }
       public function close() { $this->closed= true; }
     };
-    $reader= new \io\archive\zip\ZipArchiveReader($stream);
+    $reader= new ZipArchiveReader($stream);
     $reader->close();
-    $this->assertTrue($stream->closed);
+    Assert::true($stream->closed);
   }
 }

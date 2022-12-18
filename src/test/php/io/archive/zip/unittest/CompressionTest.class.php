@@ -2,28 +2,23 @@
 
 use io\archive\zip\Compression;
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for compression enumeration
- *
- * @see      xp://io.archive.zip.Compression
- */
-class CompressionTest extends \unittest\TestCase {
+class CompressionTest {
 
   #[Test]
   public function noneInstance() {
-    $this->assertEquals(Compression::$NONE, Compression::getInstance(0));
+    Assert::equals(Compression::$NONE, Compression::getInstance(0));
   }
 
   #[Test]
   public function gzInstance() {
-    $this->assertEquals(Compression::$GZ, Compression::getInstance(8));
+    Assert::equals(Compression::$GZ, Compression::getInstance(8));
   }
 
   #[Test]
   public function bzInstance() {
-    $this->assertEquals(Compression::$BZ, Compression::getInstance(12));
+    Assert::equals(Compression::$BZ, Compression::getInstance(12));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]

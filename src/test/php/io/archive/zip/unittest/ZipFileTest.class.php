@@ -2,17 +2,17 @@
 
 use io\archive\zip\{ZipArchiveReader, ZipArchiveWriter, ZipFile};
 use io\streams\{MemoryInputStream, MemoryOutputStream};
-use unittest\Test;
+use unittest\{Assert, Test};
 
 class ZipFileTest extends AbstractZipFileTest {
 
   #[Test]
   public function zipfile_create() {
-    $this->assertInstanceOf(ZipArchiveWriter::class, ZipFile::create(new MemoryOutputStream()));
+    Assert::instance(ZipArchiveWriter::class, ZipFile::create(new MemoryOutputStream()));
   }
 
   #[Test]
   public function zipfile_open() {
-    $this->assertInstanceOf(ZipArchiveReader::class, ZipFile::open(new MemoryInputStream('PK...')));
+    Assert::instance(ZipArchiveReader::class, ZipFile::open(new MemoryInputStream('PK...')));
   }
 }

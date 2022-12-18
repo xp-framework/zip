@@ -3,9 +3,6 @@
 use lang\FormatException;
 use unittest\{Expect, Test};
 
-/**
- * TestCase for malformed zip files
- */
 class MalformedZipFileTest extends AbstractZipFileTest {
 
   #[Test, Expect(FormatException::class)]

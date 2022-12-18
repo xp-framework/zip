@@ -1,5 +1,6 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
+use unittest\Assert;
 /**
  * Tests ZIP file implementation with ZIP files created by the
  * "zip" command line utility (Info-ZIP)
