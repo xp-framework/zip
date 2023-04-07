@@ -2,7 +2,7 @@
 
 use io\archive\zip\{ZipArchiveReader, ZipArchiveWriter, ZipFile};
 use io\streams\{MemoryInputStream, MemoryOutputStream};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class ZipFileTest extends AbstractZipFileTest {
 

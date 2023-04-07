@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\{ZipDirEntry, ZipFileEntry};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 /**
  * TestCase

@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipArchiveReader;
-use unittest\Assert;
+use test\Assert;
 
 /**
  * Base class for testing zip file contents

@@ -2,7 +2,7 @@
 
 use io\archive\zip\ZipArchiveReader;
 use io\streams\Streams;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 /**
  * Base class for testing zip file contents

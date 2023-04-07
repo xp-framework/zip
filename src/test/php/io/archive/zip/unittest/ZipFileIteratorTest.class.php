@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipEntry;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 use util\NoSuchElementException;
 
 /**

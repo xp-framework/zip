@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use lang\FormatException;
-use unittest\{Expect, Test};
+use test\{Expect, Test};
 
 class MalformedZipFileTest extends AbstractZipFileTest {
 
