@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #3: Migrate to new testing library - @thekid
+
 ## 10.0.1 / 2022-02-26
 
 * Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid
