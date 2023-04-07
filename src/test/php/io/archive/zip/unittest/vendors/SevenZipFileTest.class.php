@@ -1,9 +1,8 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
-use unittest\Assert;
-use unittest\actions\ExtensionAvailable;
-use unittest\{Action, Ignore, Test};
+use test\verify\Runtime;
+use test\{Assert, Ignore, Test};
 
 /**
  * Tests 7-ZIP archives
@@ -33,12 +32,12 @@ class SevenZipFileTest extends ZipFileVendorTest {
     }
   }
 
-  #[Test, Action(eval: 'new ExtensionAvailable("zlib")')]
+  #[Test, Runtime(extensions: ['zlib'])]
   public function deflate() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'deflate'));
   }
 
-  #[Test, Action(eval: 'new ExtensionAvailable("bz2")')]
+  #[Test, Runtime(extensions: ['bz2'])]
   public function bzip2() {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'bzip2'));
   }

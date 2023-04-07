@@ -1,8 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\archive\zip\unittest\AbstractZipFileTest;
-use unittest\Assert;
-use unittest\Test;
+use test\{Assert, Test};
 
 abstract class ZipFileVendorTest extends AbstractZipFileTest {
   

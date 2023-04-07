@@ -2,7 +2,7 @@
 
 use io\archive\zip\Compression;
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class CompressionTest {
 

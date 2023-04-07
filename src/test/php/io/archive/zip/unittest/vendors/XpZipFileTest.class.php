@@ -1,8 +1,8 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
-use unittest\Assert;
-use unittest\Test;
+use test\Assert;
+use test\Test;
 
 /**
  * Tests our own ZIP file implementation.

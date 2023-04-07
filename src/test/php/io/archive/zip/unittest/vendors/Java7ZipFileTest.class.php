@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-use unittest\Assert;
-use unittest\{Ignore, Test};
+use test\Assert;
+use test\{Ignore, Test};
 
 /**
  * Tests ZIP file implementation with ZIP files created by
