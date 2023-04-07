@@ -1,6 +1,5 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
-use test\Assert;
 use test\{Ignore, Test};
 
 /**
