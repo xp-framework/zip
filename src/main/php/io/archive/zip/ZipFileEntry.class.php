@@ -5,9 +5,8 @@ use util\{Date, Objects};
 /**
  * Represents a file entry in a zip archive
  *
- * @test     xp://net.xp_framework.unittest.io.archive.ZipEntryTest
- * @see      xp://io.archive.zip.ZipEntry
- * @purpose  Interface
+ * @test  net.xp_framework.unittest.io.archive.ZipEntryTest
+ * @see   io.archive.zip.ZipEntry
  */
 class ZipFileEntry implements ZipEntry {
   protected 
@@ -25,9 +24,8 @@ class ZipFileEntry implements ZipEntry {
    *
    * @param   var... $args
    */
-  public function __construct() {
+  public function __construct(... $args) {
     $this->name= '';
-    $args= func_get_args();
     foreach ($args as $part) {
       if ($part instanceof ZipDirEntry) {
         $this->name.= $part->getName();
@@ -36,7 +34,7 @@ class ZipFileEntry implements ZipEntry {
       }
     }
     $this->name= rtrim($this->name, '/');
-    $this->mod= \util\Date::now();
+    $this->mod= Date::now();
     $this->compression= [Compression::$NONE, 6];
   }
   
@@ -111,26 +109,6 @@ class ZipFileEntry implements ZipEntry {
    */
   public function isDirectory() {
     return false;
-  }
-
-  /**
-   * Returns an input stream for reading from this entry
-   *
-   * @deprecated Use in() instead
-   * @return  io.streams.InputStream
-   */
-  public function getInputStream() {
-    return $this->in();
-  }
-
-  /**
-   * Returns an output stream for writing to this entry
-   *
-   * @deprecated Use out() instead
-   * @return  io.streams.OutputStream
-   */
-  public function getOutputStream() {
-    return $this->out();
   }
 
   /**

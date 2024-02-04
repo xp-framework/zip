@@ -5,9 +5,8 @@ use util\{Date, Objects};
 /**
  * Represents a Dir entry in a zip archive
  *
- * @test     xp://net.xp_framework.unittest.io.archive.ZipEntryTest
- * @see      xp://io.archive.zip.ZipEntry
- * @purpose  Interface
+ * @test  net.xp_framework.unittest.io.archive.ZipEntryTest
+ * @see   io.archive.zip.ZipEntry
  */
 class ZipDirEntry implements ZipEntry {
   protected 
@@ -20,9 +19,8 @@ class ZipDirEntry implements ZipEntry {
    *
    * @param   var... $args
    */
-  public function __construct() {
+  public function __construct(... $args) {
     $this->name= '';
-    $args= func_get_args();
     foreach ($args as $part) {
       if ($part instanceof self) {
         $this->name.= $part->getName();
