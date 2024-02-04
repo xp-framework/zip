@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.0.0 / 2024-02-04
+
 * Removed deprecated getInputStream() & getOutputStream() methods from
   `io.archive.zip.ZipFileEntry`
   (@thekid)
