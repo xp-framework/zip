@@ -1,13 +1,12 @@
 <?php namespace io\archive\zip;
 
-use io\streams\{
-  InputStream,
-  OutputStream,
-  Bz2CompressingOutputStream,
-  Bz2DecompressingInputStream,
+use io\streams\compress\{
+  Bzip2OutputStream,
+  Bzip2InputStream,
   DeflatingOutputStream,
   InflatingInputStream
 };
+use io\streams\{InputStream, OutputStream};
 use lang\{Enum, IllegalArgumentException};
 
 /**
@@ -72,11 +71,11 @@ abstract class Compression extends Enum {
       static function __static() { }
       
       public function getCompressionStream(OutputStream $out, $level= 6) {
-        return new Bz2CompressingOutputStream($out, $level);
+        return new Bzip2OutputStream($out, $level);
       }
 
       public function getDecompressionStream(InputStream $in) {
-        return new Bz2DecompressingInputStream($in);
+        return new Bzip2InputStream($in);
       }
     };
   }
