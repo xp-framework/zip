@@ -3,6 +3,10 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.1.0 / 2024-03-24
+
+* Made compatible with XP 12 - @thekid
+
 ## 11.0.0 / 2024-02-04
 
 * Removed deprecated getInputStream() & getOutputStream() methods from
