@@ -3,6 +3,10 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.2.0 / 2025-08-15
+
+* Added compatibility with `xp-forge/compression` version 2.0+ - @thekid
+
 ## 11.1.0 / 2024-03-24
 
 * Added dependency on `xp-forge/compression`, see xp-framework/rfc#342
