@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.2.1 / 2025-11-20
+
 * Fixed issue #4: *Undefined property: [...]ZipFileOutputStream::$data*
   when calling `close()` more than once.
   (@thekid)
