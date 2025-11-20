@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
-use io\streams\{MemoryInputStream, MemoryOutputStream};
+use io\streams\{MemoryInputStream, MemoryOutputStream, StreamTransfer};
 use lang\IllegalArgumentException;
 use test\{Assert, Expect, Test};
 
@@ -115,5 +115,20 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     $fixture->close();
 
     Assert::equals(['関連事業調査.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
+  }
+
+  #[Test]
+  public function transferring_a_file() {
+    $out= new MemoryOutputStream();
+    $fixture= new ZipArchiveWriter($out);
+    $file= $fixture->add(new ZipFileEntry('test.txt'));
+
+    $transfer= new StreamTransfer(new MemoryInputStream('File contents'), $file->out());
+    $transfer->transferAll();
+    $transfer->close();
+
+    $fixture->close();
+
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
   }
 }

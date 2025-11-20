@@ -3,6 +3,10 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue #4: *Undefined property: [...]ZipFileOutputStream::$data*
+  when calling `close()` more than once.
+  (@thekid)
+
 ## 11.2.0 / 2025-08-16
 
 * Added compatibility with `xp-framework/math` version 10.0+ - @thekid

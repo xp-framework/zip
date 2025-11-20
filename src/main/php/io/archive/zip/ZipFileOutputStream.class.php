@@ -84,6 +84,6 @@ class ZipFileOutputStream implements OutputStream {
       0
     );
     $this->writer->streamWrite($bytes);
-    unset($this->data);
+    $this->data= null;
   }
 }
