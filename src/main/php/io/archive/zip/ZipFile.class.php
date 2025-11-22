@@ -7,7 +7,7 @@ use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
  * Zip archives hanadling
  *
  * Usage (creating a zip file)
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ---------------------------
  * ```php
  * $z= ZipFile::create(new FileOutputStream(new File('dist.zip')));
  * $dir= $z->add(new ZipDirEntry('META-INF'));
@@ -17,7 +17,7 @@ use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
  * ```
  *
  * Usage (reading a zip file)
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * --------------------------
  * ```php
  * $z= ZipFile::open(new FileInputStream(new File('dist.zip')));
  * foreach ($z->entries() as $entry) {
