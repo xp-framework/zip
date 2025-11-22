@@ -1,6 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\{InputStream, Seekable};
+use lang\Closeable;
 
 /**
  * Read from a zip file
@@ -25,13 +26,13 @@ use io\streams\{InputStream, Seekable};
  * }
  * ```
  *
+ * @see   io.archive.zip.ZipArchive#open
  * @test  io.archive.zip.unittest.ZipArchiveReaderTest
  * @test  io.archive.zip.unittest.ZipFileEntriesTest
  * @test  io.archive.zip.unittest.ZipFileIteratorTest
- * @see   io.archive.zip.ZipArchive#open
  */
-class ZipArchiveReader {
-  protected $impl= NULL;
+class ZipArchiveReader implements Closeable {
+  protected $impl;
 
   /**
    * Creation constructor

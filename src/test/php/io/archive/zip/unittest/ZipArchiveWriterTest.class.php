@@ -131,4 +131,16 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
 
     Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
   }
+
+  #[Test]
+  public function central_directory_added_only_once() {
+    $out= new MemoryOutputStream();
+
+    $fixture= new ZipArchiveWriter($out);
+    $fixture->close();
+    $size= $out->size();
+    $fixture->close();
+
+    Assert::equals($size, $out->size());
+  }
 }

@@ -1,16 +1,16 @@
 <?php namespace io\archive\zip;
 
 use io\streams\OutputStream;
-use lang\IllegalArgumentException;
+use lang\{Closeable, IllegalArgumentException};
 use util\Date;
 
 /**
  * Writes to a ZIP archive
  *
- * @see   xp://io.archive.zip.ZipArchive#create
- * @test  xp://io.archive.zip.unittest.ZipArchiveWriterTest
+ * @see   io.archive.zip.ZipArchive#create
+ * @test  io.archive.zip.unittest.ZipArchiveWriterTest
  */
-class ZipArchiveWriter {
+class ZipArchiveWriter implements Closeable {
   protected
     $stream   = null,
     $dir      = [], 
@@ -237,13 +237,16 @@ class ZipArchiveWriter {
   /**
    * Closes this zip archive
    *
+   * @return void
    */
   public function close() {
+    if (null === $this->dir) return;
+
+    // Close any open streams
     $this->out && $this->out->close();
 
-    $comment= '';
-    
     // Build central directory
+    $comment= '';
     $l= 0;
     foreach ($this->dir as $name => $entry) {
       $s= (
@@ -272,6 +275,8 @@ class ZipArchiveWriter {
       strlen($comment)
     ));
     $this->stream->write($comment);
+    $this->stream->close();
+    $this->dir= null;
   }
   
   /**

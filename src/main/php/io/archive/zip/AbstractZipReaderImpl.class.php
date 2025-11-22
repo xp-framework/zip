@@ -104,6 +104,8 @@ abstract class AbstractZipReaderImpl {
 
   /**
    * Closes underlying stream
+   *
+   * @return void
    */
   public function close() {
     $this->stream->close();

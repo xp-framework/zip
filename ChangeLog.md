@@ -3,6 +3,10 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed `ZipArchiveWriter` potentially appending the ZIP central directory
+  to the end of the file more than once.
+  (@thekid)
+
 ## 11.2.1 / 2025-11-20
 
 * Fixed issue #4: *Undefined property: [...]ZipFileOutputStream::$data*
