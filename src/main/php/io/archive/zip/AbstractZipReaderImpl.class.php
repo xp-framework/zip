@@ -2,7 +2,7 @@
 
 use io\streams\InputStream;
 use lang\{FormatException, IllegalArgumentException, MethodNotImplementedException};
-use util\Date;
+use util\{Date, Secret};
 
 /**
  * Abstract base class for zip reader implementations
@@ -34,14 +34,13 @@ abstract class AbstractZipReaderImpl {
   /**
    * Set password to use when extracting 
    *
-   * @param   string password
+   * @param  ?string|util.Secret $password
    */
   public function setPassword($password) {
     if (null === $password) {
       $this->password= null;
     } else {
-      $this->password= new ZipCipher();
-      $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+      $this->password= $password instanceof Secret ? $password : new Secret($password);
     }
   }
 
@@ -229,12 +228,31 @@ abstract class AbstractZipReaderImpl {
         // AES vs. traditional PKZIP cipher
         if (99 === $header['compression']) {
           $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
+          switch ($aes['strength']) {
+            case 1: $sl= 8; $dl= 16; break;
+            case 2: $sl= 12; $dl= 24; break;
+            case 3: $sl= 16; $dl= 32; break;
+            default: throw new IllegalArgumentException('Invalid AES strength '.$aes['strength']);
+          }
 
-          // TODO: Implement
+          // Verify password
+          $salt= $this->streamRead($sl);
+          $pvv= $this->streamRead(2);
+          $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
+          if (0 !== substr_compare($dk, $pvv, 64, 2)) {
+            throw new IllegalArgumentException('The password did not match');
+          }
 
-          throw new MethodNotImplementedException('Not yet implemented', 'AES');
+          $this->skip-= $sl + 2;
+          $header['compression']= $aes['compression'];
+          $is= new AESInputStream(
+            new ZipFileInputStream($this, $this->position, $header['compressed'] - $sl - 2),
+            substr($dk, 0, 32),
+            substr($dk, 32, 32)
+          );
         } else if ($header['flags'] & 1) {
-          $cipher= new ZipCipher($this->password);
+          $cipher= new ZipCipher();
+          $cipher->initialize(iconv(\xp::ENCODING, 'cp437', $this->password->reveal()));
           $preamble= $cipher->decipher($this->streamRead(12));
           
           // Verify            
@@ -243,9 +261,12 @@ abstract class AbstractZipReaderImpl {
           }
           
           // Password matches.
-          $this->skip-= 12; 
+          $this->skip-= 12;
           $header['compressed']-= 12;
-          $is= new DecipheringInputStream(new ZipFileInputStream($this, $this->position, $header['compressed']), $cipher);
+          $is= new DecipheringInputStream(
+            new ZipFileInputStream($this, $this->position, $header['compressed']),
+            $cipher
+          );
         } else {
           $is= new ZipFileInputStream($this, $this->position, $header['compressed']);
         }
