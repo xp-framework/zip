@@ -138,9 +138,9 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
 
     $fixture= new ZipArchiveWriter($out);
     $fixture->close();
-    $size= $out->size();
+    $size= strlen($out->bytes());
     $fixture->close();
 
-    Assert::equals($size, $out->size());
+    Assert::equals($size, strlen($out->bytes()));
   }
 }
