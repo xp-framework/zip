@@ -5,7 +5,7 @@ use io\streams\InputStream;
 /**
  * Deciphers using ZipCipher class
  *
- * @see   xp://io.archive.zip.ZipCipher
+ * @see   io.archive.zip.ZipCipher
  */
 class DecipheringInputStream implements InputStream {
   protected $in= null;

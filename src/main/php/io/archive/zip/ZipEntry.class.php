@@ -5,7 +5,7 @@ use util\Date;
 /**
  * Represents an entry in a zip archive
  *
- * @see      xp://io.archive.zip.ZipArchive
+ * @see   io.archive.zip.ZipArchive
  */
 interface ZipEntry {
   

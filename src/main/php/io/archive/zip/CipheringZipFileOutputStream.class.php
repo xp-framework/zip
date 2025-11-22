@@ -5,7 +5,7 @@ use io\streams\{MemoryOutputStream, OutputStream};
 /**
  * Output stream for files
  *
- * @see   xp://io.archive.zip.ZipArchiveWriter#addFile
+ * @see   io.archive.zip.ZipArchiveWriter::addFile
  */
 class CipheringZipFileOutputStream implements OutputStream {
   protected $writer, $file, $name, $md, $cipher;

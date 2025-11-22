@@ -5,7 +5,7 @@ use util\{Date, Objects};
 /**
  * Represents a file entry in a zip archive
  *
- * @test  net.xp_framework.unittest.io.archive.ZipEntryTest
+ * @test  io.archive.zip.unittest.ZipEntryTest
  * @see   io.archive.zip.ZipEntry
  */
 class ZipFileEntry implements ZipEntry {

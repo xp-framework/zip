@@ -35,11 +35,10 @@ use lang\{Enum, IllegalArgumentException};
  *
  * This implementation supports 0 (NONE), 8 (GZ) and 12 (BZIP2).
  *
- * @ext      bz2
- * @ext      zlib
- * @see      xp://io.archive.zip.ZipArchive
- * @test     xp://net.xp_framework.unittest.io.archive.CompressionTest
- * @purpose  Compressions
+ * @ext   bz2
+ * @ext   zlib
+ * @see   io.archive.zip.ZipArchive
+ * @test  io.archive.zip.unittest.CompressionTest
  */
 abstract class Compression extends Enum {
   public static $NONE, $GZ, $BZ;
@@ -101,7 +100,7 @@ abstract class Compression extends Enum {
   /**
    * Get a compression instance by a given id
    *
-   * @param   int n
+   * @param   int $n
    * @return  io.archive.zip.Compression
    * @throws  lang.IllegalArgumentException
    */

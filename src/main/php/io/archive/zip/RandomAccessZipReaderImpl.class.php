@@ -3,16 +3,13 @@
 use io\streams\{InputStream, Seekable};
 use lang\FormatException;
 
-/**
- * Zip archive reader that works on Seekable input streams.
- *
- */
+/** Zip archive reader that works on Seekable input streams. */
 class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
 
   /**
    * Creation constructor
    *
-   * @param   io.streams.InputStream stream
+   * @param  io.streams.InputStream $stream
    */
   public function __construct(InputStream $stream) {
     parent::__construct(cast($stream, 'io.streams.Seekable'));
@@ -21,7 +18,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
   /**
    * Get first entry
    *
-   * @return  io.archive.zip.ZipEntry
+   * @return io.archive.zip.ZipEntry
    */
   public function firstEntry() {
     $this->streamPosition(0);
@@ -31,7 +28,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
   /**
    * Get next entry
    *
-   * @return  io.archive.zip.ZipEntry
+   * @return io.archive.zip.ZipEntry
    */
   public function nextEntry() {
     $this->skip && $this->streamPosition($this->position + $this->skip);
@@ -41,8 +38,8 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
   /**
    * Seeks a stream
    *
-   * @param   int offset absolute offset
-   * @param   int whence
+   * @param  int $offset absolute offset
+   * @param  int $whence
    */
   protected function streamSeek($offset, $whence) {
     $this->stream->seek($offset, $whence);
@@ -51,6 +48,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
   /**
    * Read central directory
    *
+   * @return void
    */
   protected function readCentralDirectory() {
     $entries= $this->seekCentralDirectory();
@@ -102,7 +100,7 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
       $marker= substr($marker, -3);
     }
     
-    if (0 == $this->streamAvailable()) {
+    if (0 === $this->streamAvailable()) {
       throw new FormatException('Could not find central directory; currently not supporting archives w/ file comments.');
     }
 

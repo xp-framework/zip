@@ -26,7 +26,7 @@ use lang\Closeable;
  * }
  * ```
  *
- * @see   io.archive.zip.ZipArchive#open
+ * @see   io.archive.zip.ZipArchive::open
  * @test  io.archive.zip.unittest.ZipArchiveReaderTest
  * @test  io.archive.zip.unittest.ZipFileEntriesTest
  * @test  io.archive.zip.unittest.ZipFileIteratorTest

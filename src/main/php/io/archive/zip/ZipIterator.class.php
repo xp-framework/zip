@@ -1,13 +1,13 @@
 <?php namespace io\archive\zip;
 
-use util\NoSuchElementException;
+use util\{NoSuchElementException, XPIterator};
 
 /**
  * Iterates on ZIP archive entries
  *
- * @test    xp://net.xp_framework.unittest.io.archive.ZipFileIteratorTest
+ * @test  io.archive.zip.unittest.ZipFileIteratorTest
  */
-class ZipIterator implements \util\XPIterator {
+class ZipIterator implements XPIterator {
   protected $impl= null;
   protected $entry= null;
   protected $more= true;
@@ -15,7 +15,7 @@ class ZipIterator implements \util\XPIterator {
   /**
    * Constructor
    *
-   * @param   io.archive.zip.AbstractZipReaderImpl impl
+   * @param  io.archive.zip.AbstractZipReaderImpl $impl
    */
   public function __construct($impl) {
     $this->impl= $impl;
@@ -27,7 +27,7 @@ class ZipIterator implements \util\XPIterator {
    * Returns whether there are more entries, forwarding to the next
    * one if necessary.
    *
-   * @return  bool
+   * @return bool
    */
   protected function nextEntry() {
     if ($this->more && null === $this->entry) {
@@ -41,7 +41,7 @@ class ZipIterator implements \util\XPIterator {
   /**
    * Returns whether there are more entries in the zip file
    *
-   * @return  bool
+   * @return bool
    */
   public function hasNext() {
     return $this->nextEntry();
@@ -50,8 +50,8 @@ class ZipIterator implements \util\XPIterator {
   /**
    * Returns the next entry in the zip file
    *
-   * @return  io.archive.zip.ZipEntry
-   * @throws  util.NoSuchElementException when there are no more elements
+   * @return io.archive.zip.ZipEntry
+   * @throws util.NoSuchElementException when there are no more elements
    */
   public function next() {
     if (!$this->nextEntry()) {

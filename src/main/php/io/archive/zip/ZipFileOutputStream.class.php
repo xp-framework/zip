@@ -5,7 +5,7 @@ use io\streams\{MemoryOutputStream, OutputStream};
 /**
  * Output stream for files
  *
- * @see   io.archive.zip.ZipArchiveWriter::addFile
+ * @see  io.archive.zip.ZipArchiveWriter::addFile
  */
 class ZipFileOutputStream implements OutputStream {
   protected $writer, $file, $name, $md;

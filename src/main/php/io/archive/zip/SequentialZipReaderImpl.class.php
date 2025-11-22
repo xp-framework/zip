@@ -3,10 +3,7 @@
 use io\streams\Seekable;
 use lang\{IllegalArgumentException, IllegalStateException};
 
-/**
- * Zip archive reader that works on any input stream.
- *
- */
+/** Zip archive reader that works on any input stream */
 class SequentialZipReaderImpl extends AbstractZipReaderImpl {
   private $initial= true;
 

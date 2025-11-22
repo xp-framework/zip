@@ -5,8 +5,8 @@ use math\BigInt;
 /**
  * Zip Cipher.
  *
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.SevenZipFileTest
- * @see      http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+ * @test   io.archive.zip.unittest.vendors.SevenZipFileTest
+ * @see    http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  */
 class ZipCipher {
   protected $keys= null;

@@ -5,7 +5,7 @@ use Iterator, ReturnTypeWillChange;
 /**
  * Iterates on ZIP archive entries
  *
- * @test    xp://net.xp_framework.unittest.io.archive.ZipFileEntriesTest
+ * @test  io.archive.zip.unittest.ZipFileEntriesTest
  */
 class ZipEntries implements Iterator {
   protected $impl= null;
