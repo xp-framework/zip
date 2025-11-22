@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.2.2 / 2025-11-22
+
 * Fixed `ZipArchiveWriter` potentially appending the ZIP central directory
   to the end of the file more than once.
   (@thekid)
