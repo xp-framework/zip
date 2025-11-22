@@ -30,26 +30,26 @@ use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
  * }
  * ```
  *
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.InfoZipZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.JarFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.JavaZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.Java7ZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.PHPZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.SevenZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.WinRARZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.WindowsZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.vendors.XpZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
- * @test     xp://net.xp_framework.unittest.io.archive.ZipFileTest
- * @see      http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+ * @test  io.archive.zip.unittest.vendors.InfoZipZipFileTest
+ * @test  io.archive.zip.unittest.vendors.JarFileTest
+ * @test  io.archive.zip.unittest.vendors.JavaZipFileTest
+ * @test  io.archive.zip.unittest.vendors.Java7ZipFileTest
+ * @test  io.archive.zip.unittest.vendors.PHPZipFileTest
+ * @test  io.archive.zip.unittest.vendors.SevenZipFileTest
+ * @test  io.archive.zip.unittest.vendors.WinRARZipFileTest
+ * @test  io.archive.zip.unittest.vendors.WindowsZipFileTest
+ * @test  io.archive.zip.unittest.vendors.XpZipFileTest
+ * @test  io.archive.zip.unittest.MalformedZipFileTest
+ * @test  io.archive.zip.unittest.ZipFileTest
+ * @see   http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  */
 abstract class ZipFile {
   
   /**
    * Creation constructor
    *
-   * @param   string|io.Channel|io.streams.OutputStream $arg
-   * @return  io.archive.zip.ZipArchiveWriter
+   * @param  string|io.Path|io.Channel|io.streams.OutputStream $arg
+   * @return io.archive.zip.ZipArchiveWriter
    */
   public static function create($arg) {
     if ($arg instanceof Channel) {
@@ -64,8 +64,8 @@ abstract class ZipFile {
   /**
    * Read constructor
    *
-   * @param   string|io.Channel|io.streams.InputStream $arg
-   * @return  io.archive.zip.ZipArchiveReader
+   * @param  string|io.Path|io.Channel|io.streams.InputStream $arg
+   * @return io.archive.zip.ZipArchiveReader
    */
   public static function open($arg) {
     if ($arg instanceof Channel) {
