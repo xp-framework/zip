@@ -82,7 +82,7 @@ class SevenZipFileTest extends ZipFileVendorTest {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'zip-crypto'));
   }
 
-  #[Test, Ignore('Not yet supported')]
+  #[Test]
   public function aes256PasswordProtected() {
     $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'aes-256'));
   }

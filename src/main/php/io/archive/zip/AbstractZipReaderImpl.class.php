@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use lang\{FormatException, IllegalArgumentException};
+use lang\{FormatException, IllegalArgumentException, MethodNotImplementedException};
 use util\Date;
 
 /**
@@ -226,8 +226,14 @@ abstract class AbstractZipReaderImpl {
           $this->skip= $header['compressed']+ 16;
         }
 
-        // Bit 1: The file is encrypted
-        if ($header['flags'] & 1) {
+        // AES vs. traditional PKZIP cipher
+        if (99 === $header['compression']) {
+          $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
+
+          // TODO: Implement
+
+          throw new MethodNotImplementedException('Not yet implemented', 'AES');
+        } else if ($header['flags'] & 1) {
           $cipher= new ZipCipher($this->password);
           $preamble= $cipher->decipher($this->streamRead(12));
           
