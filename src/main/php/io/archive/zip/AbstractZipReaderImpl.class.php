@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use lang\{FormatException, IllegalArgumentException, MethodNotImplementedException};
+use lang\{FormatException, IllegalArgumentException, IllegalAccessException};
 use util\{Date, Secret};
 
 /**
@@ -227,6 +227,10 @@ abstract class AbstractZipReaderImpl {
 
         // AES vs. traditional PKZIP cipher
         if (99 === $header['compression']) {
+          if (null === $this->password) {
+            throw new IllegalAccessException('No password set');
+          }
+
           $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
           switch ($aes['strength']) {
             case 1: $sl= 8; $dl= 16; break;
@@ -240,7 +244,7 @@ abstract class AbstractZipReaderImpl {
           $pvv= $this->streamRead(2);
           $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
           if (0 !== substr_compare($dk, $pvv, 64, 2)) {
-            throw new IllegalArgumentException('The password did not match');
+            throw new IllegalAccessException('The password did not match');
           }
 
           $this->skip-= $sl + 2;
@@ -251,13 +255,16 @@ abstract class AbstractZipReaderImpl {
             substr($dk, 32, 32)
           );
         } else if ($header['flags'] & 1) {
+          if (null === $this->password) {
+            throw new IllegalAccessException('No password set');
+          }
+
+          // Verify password
           $cipher= new ZipCipher();
           $cipher->initialize(iconv(\xp::ENCODING, 'cp437', $this->password->reveal()));
           $preamble= $cipher->decipher($this->streamRead(12));
-          
-          // Verify            
-          if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xFF)) {
-            throw new IllegalArgumentException('The password did not match ('.ord($preamble[11]).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
+          if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xff)) {
+            throw new IllegalAccessException('The password did not match');
           }
           
           // Password matches.
