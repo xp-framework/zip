@@ -2,7 +2,7 @@
 
 use io\streams\OutputStream;
 use lang\{Closeable, IllegalArgumentException};
-use util\Date;
+use util\{Date, Secret};
 
 /**
  * Writes to a ZIP archive
@@ -52,7 +52,7 @@ class ZipArchiveWriter implements Closeable {
   /**
    * Set password to use when adding entries 
    *
-   * @param   string password
+   * @param   string|util.Secret $password
    * @return  io.archive.zip.ZipArchiveWriter this
    */
   public function usingPassword($password) {
@@ -60,7 +60,11 @@ class ZipArchiveWriter implements Closeable {
       $this->password= null;
     } else {
       $this->password= new ZipCipher();
-      $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+      $this->password->initialize(iconv(
+        \xp::ENCODING,
+        'cp437',
+        $password instanceof Secret ? $password->reveal() : $password)
+      );
     }
     return $this;
   }
