@@ -4,7 +4,6 @@ use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
 use io\streams\{MemoryInputStream, MemoryOutputStream, StreamTransfer};
 use lang\IllegalArgumentException;
 use test\{Assert, Expect, Test, Values};
-use util\Secret;
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {
 
