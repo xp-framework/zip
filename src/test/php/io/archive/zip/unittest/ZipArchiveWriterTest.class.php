@@ -84,7 +84,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     );
   }
 
-  #[Test, Values(['secret', new Secret('secret')])]
+  #[Test, Values(from: 'passwords')]
   public function using_password_protection($password) {
     $out= new MemoryOutputStream();
 
