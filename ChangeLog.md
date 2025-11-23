@@ -3,6 +3,9 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #6: Support listing entries (with encrypted content) without
+  password by deferring verification until content stream is accessed
+  (@thekid)
 * Merged PR #5: Implement support for reading AES-enrypted entries
   (@thekid)
 
