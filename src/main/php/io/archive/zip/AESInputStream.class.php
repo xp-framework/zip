@@ -13,6 +13,7 @@ class AESInputStream implements InputStream {
 
   private $in, $key;
   private $cipher, $counter, $hmac;
+  private $buffer= '';
 
   /**
    * Constructor
@@ -71,10 +72,22 @@ class AESInputStream implements InputStream {
    * @throws lang.IllegalStateException when HMAC verification fails
    */
   public function read($limit= 8192) {
-    $chunk= $this->in->read($limit);
-    if ($this->in->available()) return $this->decrypt($chunk);
+    $chunk= $this->buffer.$this->in->read($limit);
+
+    // Ensure we always decrypt complete blocks while streaming
+    if ($this->in->available()) {
+      $rest= -strlen($chunk) % self::BLOCK;
+      if ($rest) {
+        $this->buffer= substr($chunk, $rest);
+        return $this->decrypt(substr($chunk, 0, $rest));
+      } else {
+        $this->buffer= '';
+        return $this->decrypt($chunk);
+      }
+    }
 
     // Verify HMAC checksum for last block
+    $this->buffer= '';
     $plain= $this->decrypt(substr($chunk, 0, -10));
 
     $mac= hash_final($this->hmac, true);
