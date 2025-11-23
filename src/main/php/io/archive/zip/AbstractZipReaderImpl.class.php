@@ -209,20 +209,16 @@ abstract class AbstractZipReaderImpl {
           if (!isset($this->index[$name])) throw new FormatException('.zip archive broken: cannot find "'.$name.'" in central directory.');
           $header= $this->index[$name];
 
-          // In case we're here, we can be sure to have a 
-          // RandomAccessStream - otherwise the central directory
-          // could not have been read in the first place. So,
-          // we may seek.
-          // If we had strict type checking this would not be
-          // possible, though.
+          // In case we're here, we can be sure to have a RandomAccessStream - otherwise the
+          // central directory could not have been read in the first place. So, we may seek.
           // The offset is relative to the file begin - but also skip over the usual parts:
           // * file header signature (4 bytes)
           // * file header (26 bytes)
           // * file extra + file name (variable size)
-          $this->streamPosition($header['offset']+ 30 + $header['extralen'] + $header['namelen']);
+          $this->streamPosition($header['offset'] + 30 + $header['extralen'] + $header['namelen']);
           
           // Set skip accordingly: 4 bytes data descriptor signature + 12 bytes data descriptor
-          $this->skip= $header['compressed']+ 16;
+          $this->skip= $header['compressed'] + 16;
         }
 
         // AES vs. traditional PKZIP cipher
