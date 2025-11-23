@@ -60,27 +60,45 @@ class SevenZipFileTest extends ZipFileVendorTest {
 
   #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function missing_password($fixture) {
-    $this->archiveReaderFor($this->vendor(), $fixture)->iterator()->next();
+    $this->archiveReaderFor($this->vendor(), $fixture)
+      ->iterator()
+      ->next()
+      ->in()
+    ;
   }
 
   #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function incorrect_password($fixture) {
-    $this->archiveReaderFor($this->vendor(), $fixture)->usingPassword('wrong')->iterator()->next();
+    $this->archiveReaderFor($this->vendor(), $fixture)
+      ->usingPassword('wrong')
+      ->iterator()
+      ->next()
+      ->in()
+    ;
+  }
+
+  #[Test, Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
+  public function password_not_needed_for_listing($fixture) {
+    $reader= $this->archiveReaderFor($this->vendor(), $fixture);
+    $sizes= [];
+    foreach ($reader->entries() as $entry) {
+      $sizes[$entry->getName()]= $entry->getSize();
+    }
+
+    Assert::equals(['password.txt' => 15, 'very.txt' => 20], $sizes);
   }
 
   #[Test, Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function password_protected($fixture) {
-    $reader= $this->archiveReaderFor($this->vendor(), $fixture);
-    with ($it= $reader->usingPassword('secret')->iterator()); {
-      $entry= $it->next();
-      Assert::equals('password.txt', $entry->getName());
-      Assert::equals(15, $entry->getSize());
-      Assert::equals('Secret contents', (string)Streams::readAll($entry->in()));
-
-      $entry= $it->next();
-      Assert::equals('very.txt', $entry->getName());
-      Assert::equals(20, $entry->getSize());
-      Assert::equals('Very secret contents', (string)Streams::readAll($entry->in()));
+    $reader= $this->archiveReaderFor($this->vendor(), $fixture)->usingPassword('secret');
+    $contents= [];
+    foreach ($reader->entries() as $entry) {
+      $contents[$entry->getName()]= Streams::readAll($entry->in());
     }
+
+    Assert::equals(
+      ['password.txt' => 'Secret contents', 'very.txt' => 'Very secret contents'],
+      $contents
+    );
   }
 }
