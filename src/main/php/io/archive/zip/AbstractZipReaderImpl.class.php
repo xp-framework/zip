@@ -267,11 +267,9 @@ abstract class AbstractZipReaderImpl {
             throw new IllegalAccessException('The password did not match');
           }
           
-          // Password matches.
           $this->skip-= 12;
-          $header['compressed']-= 12;
           $is= new DecipheringInputStream(
-            new ZipFileInputStream($this, $this->position, $header['compressed']),
+            new ZipFileInputStream($this, $this->position, $header['compressed'] - 12),
             $cipher
           );
         } else {
