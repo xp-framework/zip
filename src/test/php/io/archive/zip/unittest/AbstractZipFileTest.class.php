@@ -1,7 +1,8 @@
 <?php namespace io\archive\zip\unittest;
 
-use io\archive\zip\{ZipArchiveReader, ZipEntry, ZipFile};
-use io\streams\Streams;
+use io\File;
+use io\archive\zip\{ZipArchiveReader, ZipEntry};
+use io\streams\{Streams, InputStream};
 use test\verify\Runtime;
 use util\Secret;
 
@@ -15,9 +16,43 @@ use util\Secret;
 abstract class AbstractZipFileTest {
 
   /** @return iterable */
-  private function passwords() {
+  protected function passwords() {
     yield ['secret'];
     yield [new Secret('secret')];
+  }
+
+  /**
+   * Returns a random access input stream for a given zip file
+   *
+   * @param   string $package
+   * @param   string $name
+   * @return  io.streams.InputStream
+   */
+  protected function randomAccess($package, $name) {
+    return typeof($this)
+      ->getPackage()
+      ->getPackage($package)
+      ->getResourceAsStream($name.'.zip')
+      ->in()
+    ;
+  }
+
+  /**
+   * Returns a sequential access input stream for a given zip file
+   *
+   * @param   string $package
+   * @param   string $name
+   * @return  io.streams.InputStream
+   */
+  protected function sequentialAccess($package, $name) {
+    $resource= typeof($this)->getPackage()->getPackage($package)->getResourceAsStream($name.'.zip');
+    return newinstance(InputStream::class, [$resource], [
+      'file' => null,
+      '__construct' => function($file) { $this->file= $file->open(File::READ); },
+      'read'        => function($limit= 8192) { return $this->file->read($limit); },
+      'available'   => function() { return $this->file->eof() ? 0 : 1; },
+      'close'       => function() { $this->file->close(); },
+    ]);
   }
 
   /**
@@ -42,12 +77,7 @@ abstract class AbstractZipFileTest {
    * @return  io.archive.zip.ZipArchiveReader
    */
   protected function archiveReaderFor($package, $name) {
-    return ZipFile::open(typeof($this)
-      ->getPackage()
-      ->getPackage($package)
-      ->getResourceAsStream($name.'.zip')
-      ->in()
-    );
+    return new ZipArchiveReader($this->randomAccess($package, $name));
   }
   
   /**

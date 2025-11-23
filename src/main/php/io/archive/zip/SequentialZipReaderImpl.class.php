@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\Seekable;
-use lang\{IllegalArgumentException, IllegalStateException};
+use lang\IllegalStateException;
 
 /** Zip archive reader that works on any input stream */
 class SequentialZipReaderImpl extends AbstractZipReaderImpl {
@@ -37,6 +37,6 @@ class SequentialZipReaderImpl extends AbstractZipReaderImpl {
    * @param   int whence
    */
   protected function streamSeek($offset, $whence) {
-    throw new IllegalArgumentException('Stream not seekable');
+    throw new IllegalStateException('Stream not seekable');
   }
 }

@@ -240,6 +240,7 @@ abstract class AbstractZipReaderImpl {
             }
 
             // Verify password
+            $stream->seek(0);
             $salt= $stream->read($sl);
             $pvv= $stream->read(2);
             $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
@@ -260,6 +261,7 @@ abstract class AbstractZipReaderImpl {
             }
 
             // Verify password
+            $stream->seek(0);
             $cipher= new ZipCipher();
             $cipher->initialize(iconv(\xp::ENCODING, 'cp437', $this->password->reveal()));
             $preamble= $cipher->decipher($stream->read(12));
@@ -270,7 +272,10 @@ abstract class AbstractZipReaderImpl {
             return new DecipheringInputStream($stream, $cipher);
           };
         } else {
-          $is= function() use($stream) { return $stream; };
+          $is= function() use($stream) {
+            $stream->seek(0);
+            return $stream;
+          };
         }
         
         // Create ZipEntry object and return it

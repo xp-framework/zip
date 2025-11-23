@@ -1,15 +1,10 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipArchiveReader;
-use io\streams\Streams;
+use io\streams\InputStream;
+use lang\IllegalStateException;
 use test\{Assert, Test};
 
-/**
- * Base class for testing zip file contents
- *
- * @see   xp://net.xp_framework.unittest.io.archive.MalformedZipFileTest
- * @see   xp://net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
- */
 abstract class ZipFileContentsTest extends AbstractZipFileTest {
 
   /**
@@ -53,9 +48,31 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
   }
 
   #[Test]
-  public function loadContentAfterIteration() {
-    $entries= $this->entriesIn($this->archiveReaderFor('fixtures', 'twofiles'));
+  public function load_content_after_iteration() {
+    $reader= new ZipArchiveReader($this->randomAccess('fixtures', 'twofiles'));
+    $entries= iterator_to_array($reader->entries());
+
     Assert::equals('Eins', $this->entryContent($entries[0]));
     Assert::equals('Zwei', $this->entryContent($entries[1]));
+  }
+
+  #[Test]
+  public function load_content_twice_from_seekable() {
+    $reader= new ZipArchiveReader($this->randomAccess('fixtures', 'onefile'));
+    $entry= $reader->iterator()->next();
+
+    Assert::equals('World', $this->entryContent($entry));
+    Assert::equals('World', $this->entryContent($entry));
+  }
+
+  #[Test]
+  public function load_content_twice_from_unseekable() {
+    $reader= new ZipArchiveReader($this->sequentialAccess('fixtures', 'onefile'));
+    $entry= $reader->iterator()->next();
+
+    Assert::equals('World', $this->entryContent($entry));
+    Assert::throws(IllegalStateException::class, function() use($entry) {
+      $this->entryContent($entry);
+    });
   }
 }
