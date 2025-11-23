@@ -58,17 +58,17 @@ class SevenZipFileTest extends ZipFileVendorTest {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'ppmd'));
   }
 
-  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-256'])]
+  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function missing_password($fixture) {
     $this->archiveReaderFor($this->vendor(), $fixture)->iterator()->next();
   }
 
-  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-256'])]
+  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function incorrect_password($fixture) {
     $this->archiveReaderFor($this->vendor(), $fixture)->usingPassword('wrong')->iterator()->next();
   }
 
-  #[Test, Values(['zip-crypto', 'aes-256'])]
+  #[Test, Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function password_protected($fixture) {
     $reader= $this->archiveReaderFor($this->vendor(), $fixture);
     with ($it= $reader->usingPassword('secret')->iterator()); {

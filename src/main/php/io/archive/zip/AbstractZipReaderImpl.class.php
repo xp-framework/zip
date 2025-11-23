@@ -243,7 +243,7 @@ abstract class AbstractZipReaderImpl {
           $salt= $this->streamRead($sl);
           $pvv= $this->streamRead(2);
           $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
-          if (0 !== substr_compare($dk, $pvv, 64, 2)) {
+          if (0 !== substr_compare($dk, $pvv, 2 * $dl, 2)) {
             throw new IllegalAccessException('The password did not match');
           }
 
@@ -251,8 +251,8 @@ abstract class AbstractZipReaderImpl {
           $header['compression']= $aes['compression'];
           $is= new AESInputStream(
             new ZipFileInputStream($this, $this->position, $header['compressed'] - $sl - 2),
-            substr($dk, 0, 32),
-            substr($dk, 32, 32)
+            substr($dk, 0, $dl),
+            substr($dk, $dl, $dl)
           );
         } else if ($header['flags'] & 1) {
           if (null === $this->password) {
