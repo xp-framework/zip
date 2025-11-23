@@ -221,9 +221,10 @@ abstract class AbstractZipReaderImpl {
           $this->skip= $header['compressed'] + 16;
         }
 
+        $stream= new ZipFileInputStream($this, $this->position, $header['compressed']);
+
         // AES vs. traditional PKZIP cipher
         if (99 === $header['compression']) {
-          $stream= new ZipFileInputStream($this, $this->position, $header['compressed']);
           $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
           $header['compression']= $aes['compression'];
           $is= function() use($header, $stream, $aes) {
@@ -253,7 +254,6 @@ abstract class AbstractZipReaderImpl {
             );
           };
         } else if ($header['flags'] & 1) {
-          $stream= new ZipFileInputStream($this, $this->position, $header['compressed']);
           $is= function() use($header, $stream) {
             if (null === $this->password) {
               throw new IllegalAccessException('No password set');
@@ -270,7 +270,6 @@ abstract class AbstractZipReaderImpl {
             return new DecipheringInputStream($stream, $cipher);
           };
         } else {
-          $stream= new ZipFileInputStream($this, $this->position, $header['compressed']);
           $is= function() use($stream) { return $stream; };
         }
         
