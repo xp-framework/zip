@@ -117,7 +117,7 @@ class ZipFileEntry implements ZipEntry {
    * @return  io.streams.InputStream
    */
   public function in() {
-    return $this->compression[0]->getDecompressionStream($this->is);
+    return $this->compression[0]->getDecompressionStream(($this->is)());
   }
 
   /**
