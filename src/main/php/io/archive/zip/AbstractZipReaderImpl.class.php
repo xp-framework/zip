@@ -1,8 +1,8 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use lang\{FormatException, IllegalArgumentException};
-use util\Date;
+use lang\{FormatException, IllegalArgumentException, IllegalAccessException};
+use util\{Date, Secret};
 
 /**
  * Abstract base class for zip reader implementations
@@ -34,14 +34,13 @@ abstract class AbstractZipReaderImpl {
   /**
    * Set password to use when extracting 
    *
-   * @param   string password
+   * @param  ?string|util.Secret $password
    */
   public function setPassword($password) {
     if (null === $password) {
       $this->password= null;
     } else {
-      $this->password= new ZipCipher();
-      $this->password->initialize(iconv(\xp::ENCODING, 'cp437', $password));
+      $this->password= $password instanceof Secret ? $password : new Secret($password);
     }
   }
 
@@ -210,36 +209,65 @@ abstract class AbstractZipReaderImpl {
           if (!isset($this->index[$name])) throw new FormatException('.zip archive broken: cannot find "'.$name.'" in central directory.');
           $header= $this->index[$name];
 
-          // In case we're here, we can be sure to have a 
-          // RandomAccessStream - otherwise the central directory
-          // could not have been read in the first place. So,
-          // we may seek.
-          // If we had strict type checking this would not be
-          // possible, though.
+          // In case we're here, we can be sure to have a RandomAccessStream - otherwise the
+          // central directory could not have been read in the first place. So, we may seek.
           // The offset is relative to the file begin - but also skip over the usual parts:
           // * file header signature (4 bytes)
           // * file header (26 bytes)
           // * file extra + file name (variable size)
-          $this->streamPosition($header['offset']+ 30 + $header['extralen'] + $header['namelen']);
+          $this->streamPosition($header['offset'] + 30 + $header['extralen'] + $header['namelen']);
           
           // Set skip accordingly: 4 bytes data descriptor signature + 12 bytes data descriptor
-          $this->skip= $header['compressed']+ 16;
+          $this->skip= $header['compressed'] + 16;
         }
 
-        // Bit 1: The file is encrypted
-        if ($header['flags'] & 1) {
-          $cipher= new ZipCipher($this->password);
+        // AES vs. traditional PKZIP cipher
+        if (99 === $header['compression']) {
+          if (null === $this->password) {
+            throw new IllegalAccessException('No password set');
+          }
+
+          $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
+          switch ($aes['strength']) {
+            case 1: $sl= 8; $dl= 16; break;
+            case 2: $sl= 12; $dl= 24; break;
+            case 3: $sl= 16; $dl= 32; break;
+            default: throw new IllegalArgumentException('Invalid AES strength '.$aes['strength']);
+          }
+
+          // Verify password
+          $salt= $this->streamRead($sl);
+          $pvv= $this->streamRead(2);
+          $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
+          if (0 !== substr_compare($dk, $pvv, 2 * $dl, 2)) {
+            throw new IllegalAccessException('The password did not match');
+          }
+
+          $this->skip-= $sl + 2;
+          $header['compression']= $aes['compression'];
+          $is= new AESInputStream(
+            new ZipFileInputStream($this, $this->position, $header['compressed'] - $sl - 2),
+            substr($dk, 0, $dl),
+            substr($dk, $dl, $dl)
+          );
+        } else if ($header['flags'] & 1) {
+          if (null === $this->password) {
+            throw new IllegalAccessException('No password set');
+          }
+
+          // Verify password
+          $cipher= new ZipCipher();
+          $cipher->initialize(iconv(\xp::ENCODING, 'cp437', $this->password->reveal()));
           $preamble= $cipher->decipher($this->streamRead(12));
-          
-          // Verify            
-          if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xFF)) {
-            throw new IllegalArgumentException('The password did not match ('.ord($preamble[11]).' vs. '.(($header['crc'] >> 24) & 0xFF).')');
+          if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xff)) {
+            throw new IllegalAccessException('The password did not match');
           }
           
-          // Password matches.
-          $this->skip-= 12; 
-          $header['compressed']-= 12;
-          $is= new DecipheringInputStream(new ZipFileInputStream($this, $this->position, $header['compressed']), $cipher);
+          $this->skip-= 12;
+          $is= new DecipheringInputStream(
+            new ZipFileInputStream($this, $this->position, $header['compressed'] - 12),
+            $cipher
+          );
         } else {
           $is= new ZipFileInputStream($this, $this->position, $header['compressed']);
         }

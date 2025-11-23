@@ -3,7 +3,7 @@
 use io\archive\zip\{ZipArchiveWriter, ZipDirEntry, ZipFile, ZipFileEntry};
 use io\streams\{MemoryInputStream, MemoryOutputStream, StreamTransfer};
 use lang\IllegalArgumentException;
-use test\{Assert, Expect, Test};
+use test\{Assert, Expect, Test, Values};
 
 class ZipArchiveWriterTest extends AbstractZipFileTest {
 
@@ -83,11 +83,11 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     );
   }
 
-  #[Test]
-  public function using_password_protection() {
+  #[Test, Values(from: 'passwords')]
+  public function using_password_protection($password) {
     $out= new MemoryOutputStream();
 
-    $fixture= ZipFile::create($out)->usingPassword('secret');
+    $fixture= ZipFile::create($out)->usingPassword($password);
     $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $fixture->close();
 

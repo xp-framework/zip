@@ -1,8 +1,9 @@
 <?php namespace io\archive\zip\unittest\vendors;
 
 use io\streams\Streams;
+use lang\IllegalAccessException;
 use test\verify\Runtime;
-use test\{Assert, Ignore, Test};
+use test\{Assert, Ignore, Expect, Test, Values};
 
 /**
  * Tests 7-ZIP archives
@@ -57,13 +58,19 @@ class SevenZipFileTest extends ZipFileVendorTest {
     $this->assertCompressedEntryIn($this->archiveReaderFor($this->vendor(), 'ppmd'));
   }
 
-  /**
-   * Assertion helper
-   *
-   * @param   io.archive.zip.ZipArchiveReader reader
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertSecuredEntriesIn($reader) {
+  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
+  public function missing_password($fixture) {
+    $this->archiveReaderFor($this->vendor(), $fixture)->iterator()->next();
+  }
+
+  #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
+  public function incorrect_password($fixture) {
+    $this->archiveReaderFor($this->vendor(), $fixture)->usingPassword('wrong')->iterator()->next();
+  }
+
+  #[Test, Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
+  public function password_protected($fixture) {
+    $reader= $this->archiveReaderFor($this->vendor(), $fixture);
     with ($it= $reader->usingPassword('secret')->iterator()); {
       $entry= $it->next();
       Assert::equals('password.txt', $entry->getName());
@@ -75,15 +82,5 @@ class SevenZipFileTest extends ZipFileVendorTest {
       Assert::equals(20, $entry->getSize());
       Assert::equals('Very secret contents', (string)Streams::readAll($entry->in()));
     }
-  }
-
-  #[Test]
-  public function zipCryptoPasswordProtected() {
-    $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'zip-crypto'));
-  }
-
-  #[Test, Ignore('Not yet supported')]
-  public function aes256PasswordProtected() {
-    $this->assertSecuredEntriesIn($this->archiveReaderFor($this->vendor(), 'aes-256'));
   }
 }

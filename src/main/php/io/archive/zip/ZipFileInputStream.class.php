@@ -1,12 +1,13 @@
 <?php namespace io\archive\zip;
 
 use io\IOException;
+use io\streams\InputStream;
 
 /**
  * Zip File input stream. Reads from the current position up until a
  * certain length.
  */
-class ZipFileInputStream implements \io\streams\InputStream {
+class ZipFileInputStream implements InputStream {
   protected 
     $reader      = null,
     $start       = 0,

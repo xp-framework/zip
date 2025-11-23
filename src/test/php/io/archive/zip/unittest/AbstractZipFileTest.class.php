@@ -3,6 +3,7 @@
 use io\archive\zip\{ZipArchiveReader, ZipEntry, ZipFile};
 use io\streams\Streams;
 use test\verify\Runtime;
+use util\Secret;
 
 /**
  * Base class for testing zip files
@@ -12,6 +13,12 @@ use test\verify\Runtime;
  */
 #[Runtime(extensions: ['zlib'])]
 abstract class AbstractZipFileTest {
+
+  /** @return iterable */
+  private function passwords() {
+    yield ['secret'];
+    yield [new Secret('secret')];
+  }
 
   /**
    * Returns entry content; or NULL for directories
