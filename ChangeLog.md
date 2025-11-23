@@ -3,6 +3,9 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #5: Implement support for reading AES-enrypted entries
+  (@thekid)
+
 ## 11.2.2 / 2025-11-22
 
 * Fixed `ZipArchiveWriter` potentially appending the ZIP central directory
