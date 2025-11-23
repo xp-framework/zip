@@ -8,18 +8,15 @@ use io\streams\InputStream;
  * certain length.
  */
 class ZipFileInputStream implements InputStream {
-  protected 
-    $reader      = null,
-    $start       = 0,
-    $pos         = 0,
-    $length      = 0;
+  protected $reader, $start, $length;
+  protected $pos= 0;
 
   /**
    * Constructor
    *
-   * @param   io.archive.zip.AbstractZipReaderImpl reader
-   * @param   int start
-   * @param   int length
+   * @param  io.archive.zip.AbstractZipReaderImpl $reader
+   * @param  int $start
+   * @param  int $length
    */
   public function __construct(AbstractZipReaderImpl $reader, $start, $length) {
     $this->reader= $reader;
@@ -30,8 +27,9 @@ class ZipFileInputStream implements InputStream {
   /**
    * Read a string
    *
-   * @param   int limit default 8192
-   * @return  string
+   * @param  int $limit default 8192
+   * @return string
+   * @throws io.IOException on EOF
    */
   public function read($limit= 8192) {
     if (0 === $this->pos) {
@@ -39,7 +37,8 @@ class ZipFileInputStream implements InputStream {
     } else if ($this->pos >= $this->length) {
       throw new IOException('EOF');
     }
-    $chunk= $this->reader->streamRead(min($limit, $this->length- $this->pos));
+
+    $chunk= $this->reader->streamRead(min($limit, $this->length - $this->pos));
     $l= strlen($chunk);
     $this->pos+= $l;
     $this->reader->skip-= $l;
@@ -50,6 +49,7 @@ class ZipFileInputStream implements InputStream {
    * Returns the number of bytes that can be read from this stream 
    * without blocking.
    *
+   * @return int
    */
   public function available() {
     return $this->pos < $this->length ? $this->reader->streamAvailable() : 0;
@@ -58,6 +58,7 @@ class ZipFileInputStream implements InputStream {
   /**
    * Close this buffer
    *
+   * @return void
    */
   public function close() {
     // NOOP, leave underlying stream open
