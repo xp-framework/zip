@@ -15,7 +15,7 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
    * @return  [:string] content
    */
   protected function entriesWithContentIn($out, $password= null) {
-    $zip= ZipFile::open(new MemoryInputStream($out->bytes()))->usingPassword($password);
+    $zip= ZipFile::open(new MemoryInputStream($out->bytes()))->decryptWith($password);
 
     $entries= [];
     foreach ($zip->entries() as $entry) {
@@ -83,15 +83,37 @@ class ZipArchiveWriterTest extends AbstractZipFileTest {
     );
   }
 
-  #[Test, Values(from: 'passwords')]
-  public function using_password_protection($password) {
+  #[Test, Values(from: 'encryption')]
+  public function using_encryption($encryption) {
     $out= new MemoryOutputStream();
 
-    $fixture= ZipFile::create($out)->usingPassword($password);
+    $fixture= ZipFile::create($out)->encryptWith($encryption);
     $fixture->addFile(new ZipFileEntry('test.txt'))->out()->write('File contents');
     $fixture->close();
 
     Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, 'secret'));
+  }
+
+  #[Test, Values(from: 'compression')]
+  public function using_compression($method) {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out);
+    $fixture->addFile(new ZipFileEntry('test.txt'))->useCompression($method)->out()->write('File contents');
+    $fixture->close();
+
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out));
+  }
+
+  #[Test, Values(from: 'compression')]
+  public function using_compression_and_encryption($method) {
+    $out= new MemoryOutputStream();
+
+    $fixture= ZipFile::create($out)->encryptWith(self::SECRET);
+    $fixture->addFile(new ZipFileEntry('test.txt'))->useCompression($method)->out()->write('File contents');
+    $fixture->close();
+
+    Assert::equals(['test.txt' => 'File contents'], $this->entriesWithContentIn($out, self::SECRET));
   }
 
   #[Test, Expect(class: IllegalArgumentException::class, message: 'Filename too long (65536)')]

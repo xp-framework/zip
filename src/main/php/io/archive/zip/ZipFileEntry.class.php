@@ -12,8 +12,12 @@ class ZipFileEntry implements ZipEntry {
   protected 
     $name         = '',
     $size         = 0,
-    $mod          = null,
-    $compression  = null;
+    $crc32        = 0,
+    $mod          = null;
+
+  protected
+    $compression  = null,
+    $encryption   = null;
   
   public
     $is   = null,
@@ -35,9 +39,15 @@ class ZipFileEntry implements ZipEntry {
     }
     $this->name= rtrim($this->name, '/');
     $this->mod= Date::now();
-    $this->compression= [Compression::$NONE, 6];
   }
-  
+
+  /**
+   * Returns whether this entry is a directory
+   *
+   * @return  bool
+   */
+  public function isDirectory() { return false; }
+
   /**
    * Gets a zip entry's name
    *
@@ -68,7 +78,7 @@ class ZipFileEntry implements ZipEntry {
   /**
    * Returns which compression was used
    *
-   * @return  io.archive.zip.Compression
+   * @return io.archive.zip.Compression
    */
   public function getCompression() {
     return $this->compression[0];
@@ -77,8 +87,8 @@ class ZipFileEntry implements ZipEntry {
   /**
    * Use a given compression
    *
-   * @param   int level default 6
-   * @param   io.archive.zip.Compression compression
+   * @param  io.archive.zip.Compression $compression
+   * @param  int $level default 6
    */
   public function setCompression(Compression $compression, $level= 6) {
     $this->compression= [$compression, $level];
@@ -102,13 +112,50 @@ class ZipFileEntry implements ZipEntry {
     $this->size= $size;
   }
 
+  /** @return int */
+  public function crc32() { return $this->crc32; }
+
   /**
-   * Returns whether this entry is a directory
+   * Sets CRC32 checksum
    *
-   * @return  bool
+   * @param  int
+   * @return self
    */
-  public function isDirectory() {
-    return false;
+  public function withCrc32($crc32) {
+    $this->crc32= $crc32;
+    return $this;
+  }
+
+  /** @return io.archive.zip.Compression */
+  public function compression() { return $this->compression; }
+
+  /**
+   * Use a given compression
+   *
+   * @param  io.archive.zip.Compression $compression
+   * @param  int $level default 6
+   * @return self
+   */
+  public function useCompression(Compression $compression, $level= 6) {
+    $this->compression= [$compression, $level];
+    return $this;
+  }
+
+  /** @return io.archive.zip.Encryption */
+  public function encryption() { return $this->encryption; }
+
+  /**
+   * Use a given encryption
+   *
+   * @param  ?io.archive.zip.Encryption $encryption
+   * @param  bool $overwrite
+   * @return self
+   */
+  public function useEncryption($encryption, $overwrite= true) {
+    if (null === $this->encryption || $overwrite) {
+      $this->encryption= $encryption;
+    }
+    return $this;
   }
 
   /**
@@ -117,7 +164,18 @@ class ZipFileEntry implements ZipEntry {
    * @return  io.streams.InputStream
    */
   public function in() {
-    return $this->compression[0]->getDecompressionStream(($this->is)());
+    $is= $this->is;
+    $is->seek(0);
+
+    if ($this->encryption) {
+      $is= $this->encryption->in($is, $this->crc32);
+    }
+
+    if ($this->compression) {
+      $is= $this->compression[0]->getDecompressionStream($is);
+    }
+
+    return $is;
   }
 
   /**
@@ -126,7 +184,13 @@ class ZipFileEntry implements ZipEntry {
    * @return  io.streams.OutputStream
    */
   public function out() {
-    return $this->os->withCompression($this->compression[0],  $this->compression[1]);
+    $os= $this->os;
+
+    if ($this->compression) {
+      $os->stream= $this->compression[0]->getCompressionStream($os->stream, $this->compression[1]);
+    }
+
+    return $os;
   }
 
   /**
@@ -139,14 +203,18 @@ class ZipFileEntry implements ZipEntry {
       "%s(%s)@{\n".
       "  [lastModified] %s\n".
       "  [compression ] %s level %d\n".
+      "  [encryption  ] %s\n".
       "  [size        ] %d\n".
+      "  [crc32       ] %d\n".
       "}",
       nameof($this),
       $this->name,
       Objects::stringOf($this->mod),
-      Objects::stringOf($this->compression[0]),
-      $this->compression[1],
-      $this->size
+      $this->compression ? Objects::stringOf($this->compression[0]) : 'NONE',
+      $this->compression ? $this->compression[1] : 0,
+      Objects::stringOf($this->encryption),
+      $this->size,
+      $this->crc32
     );
   }
 }

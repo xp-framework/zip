@@ -221,69 +221,25 @@ abstract class AbstractZipReaderImpl {
           $this->skip= $header['compressed'] + 16;
         }
 
-        $stream= new ZipFileInputStream($this, $this->position, $header['compressed']);
-
         // AES vs. traditional PKZIP cipher
         if (99 === $header['compression']) {
           $aes= unpack('vheader/vsize/vversion/a2vendor/cstrength/vcompression', $extra);
           $header['compression']= $aes['compression'];
-          $is= function() use($header, $stream, $aes) {
-            if (null === $this->password) {
-              throw new IllegalAccessException('No password set');
-            }
-
-            switch ($aes['strength']) {
-              case 1: $sl= 8; $dl= 16; break;
-              case 2: $sl= 12; $dl= 24; break;
-              case 3: $sl= 16; $dl= 32; break;
-              default: throw new IllegalArgumentException('Invalid AES strength '.$aes['strength']);
-            }
-
-            // Verify password
-            $stream->seek(0);
-            $salt= $stream->read($sl);
-            $pvv= $stream->read(2);
-            $dk= hash_pbkdf2('sha1', $this->password->reveal(), $salt, 1000, 2 * $dl + 2, true);
-            if (0 !== substr_compare($dk, $pvv, 2 * $dl, 2)) {
-              throw new IllegalAccessException('The password did not match');
-            }
-
-            return new AESInputStream(
-              $stream,
-              substr($dk, 0, $dl),
-              substr($dk, $dl, $dl)
-            );
-          };
+          $encryption= Encryption::aes($this->password, $aes['strength']);
         } else if ($header['flags'] & 1) {
-          $is= function() use($header, $stream) {
-            if (null === $this->password) {
-              throw new IllegalAccessException('No password set');
-            }
-
-            // Verify password
-            $stream->seek(0);
-            $cipher= new ZipCipher();
-            $cipher->initialize(iconv(\xp::ENCODING, 'cp437', $this->password->reveal()));
-            $preamble= $cipher->decipher($stream->read(12));
-            if (ord($preamble[11]) !== (($header['crc'] >> 24) & 0xff)) {
-              throw new IllegalAccessException('The password did not match');
-            }
-
-            return new DecipheringInputStream($stream, $cipher);
-          };
+          $encryption= Encryption::cipher($this->password);
         } else {
-          $is= function() use($stream) {
-            $stream->seek(0);
-            return $stream;
-          };
+          $encryption= null;
         }
         
         // Create ZipEntry object and return it
         $e= new ZipFileEntry($decoded);
         $e->setLastModified($date);
         $e->setSize($header['uncompressed']);
-        $e->setCompression(Compression::getInstance($header['compression']));
-        $e->is= $is;
+        $e->withCrc32($header['crc']);
+        $e->useCompression(Compression::getInstance($header['compression']));
+        $e->useEncryption($encryption);
+        $e->is= new ZipFileInputStream($this, $this->position, $header['compressed']);
         return $e;
       }
       case self::DHDR: {      // Zip directory

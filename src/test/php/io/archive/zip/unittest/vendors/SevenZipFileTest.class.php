@@ -70,7 +70,7 @@ class SevenZipFileTest extends ZipFileVendorTest {
   #[Test, Expect(IllegalAccessException::class), Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function incorrect_password($fixture) {
     $this->archiveReaderFor($this->vendor(), $fixture)
-      ->usingPassword('wrong')
+      ->decryptWith('wrong')
       ->iterator()
       ->next()
       ->in()
@@ -90,7 +90,7 @@ class SevenZipFileTest extends ZipFileVendorTest {
 
   #[Test, Values(['zip-crypto', 'aes-128', 'aes-192', 'aes-256'])]
   public function password_protected($fixture) {
-    $reader= $this->archiveReaderFor($this->vendor(), $fixture)->usingPassword('secret');
+    $reader= $this->archiveReaderFor($this->vendor(), $fixture)->decryptWith('secret');
     $contents= [];
     foreach ($reader->entries() as $entry) {
       $contents[$entry->getName()]= Streams::readAll($entry->in());

@@ -11,13 +11,14 @@ use util\{Date, Secret};
  * @test  io.archive.zip.unittest.ZipArchiveWriterTest
  */
 class ZipArchiveWriter implements Closeable {
+  public $stream;
+
   protected
-    $stream   = null,
-    $dir      = [], 
-    $pointer  = 0,
-    $out      = null,
-    $unicode  = false,
-    $password = null;
+    $dir        = [],
+    $pointer    = 0,
+    $out        = null,
+    $unicode    = false,
+    $encryption = null;
 
   const EOCD = "\x50\x4b\x05\x06\x00\x00\x00\x00";
   const FHDR = "\x50\x4b\x03\x04";
@@ -26,8 +27,8 @@ class ZipArchiveWriter implements Closeable {
   /**
    * Creation constructor
    *
-   * @param   io.streams.OutputStream stream
-   * @param   bool unicode whether to use unicode for entry names
+   * @param  io.streams.OutputStream $stream
+   * @param  bool $unicode whether to use unicode for entry names
    */
   public function __construct(OutputStream $stream, $unicode= false) {
     $this->stream= $stream;
@@ -50,23 +51,31 @@ class ZipArchiveWriter implements Closeable {
   }
 
   /**
-   * Set password to use when adding entries 
+   * Set encryption to use when adding entries
    *
-   * @param   string|util.Secret $password
-   * @return  io.archive.zip.ZipArchiveWriter this
+   * @param  ?io.zip.archive.Encryption|util.Secret|string $encryption
+   * @return self
    */
-  public function usingPassword($password) {
-    if (null === $password) {
-      $this->password= null;
+  public function encryptWith($encryption) {
+    if (null === $encryption) {
+      $this->encryption= null;
+    } else if ($encryption instanceof Encryption) {
+      $this->encryption= $encryption;
     } else {
-      $this->password= new ZipCipher();
-      $this->password->initialize(iconv(
-        \xp::ENCODING,
-        'cp437',
-        $password instanceof Secret ? $password->reveal() : $password)
-      );
+      $this->encryption= Encryption::cipher($encryption);
     }
     return $this;
+  }
+
+  /**
+   * Set password to use when adding entries
+   *
+   * @deprecated Use encryptWith() instead
+   * @param  ?string|util.Secret $password
+   * @return self
+   */
+  public function usingPassword($password) {
+    return $this->encryptWith($password);
   }
 
   /**
@@ -83,12 +92,11 @@ class ZipArchiveWriter implements Closeable {
       throw new IllegalArgumentException('Filename too long ('.$nameLength.')');
     }
 
+    // Ensure any open stream is closed
     $this->out && $this->out->close();
     $this->out= null;
     
     $mod= $entry->getLastModified();
-    $extraLength= 0;
-    $extra= '';
     $info= pack(
       'vvvvvVVVvv',
       10,                       // version
@@ -100,19 +108,13 @@ class ZipArchiveWriter implements Closeable {
       0,                        // compressed size
       0,                        // uncompressed size
       $nameLength,              // filename length
-      $extraLength              // extra field length
+      0                         // extra field length
     );
-
     $this->stream->write(self::FHDR.$info.$name);
-    $extraLength && $this->stream->write($extra);
     
     $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x10];
-    $this->pointer+= (
-      strlen(self::FHDR) + 
-      strlen($info) + 
-      $nameLength
-    );
-    
+    $this->pointer+= strlen(self::FHDR) + strlen($info) + $nameLength;
+
     return $entry;
   }
 
@@ -130,16 +132,10 @@ class ZipArchiveWriter implements Closeable {
       throw new IllegalArgumentException('Filename too long ('.$nameLength.')');
     }
 
+    // Ensure any open stream is closed
     $this->out && $this->out->close();
-
-    if ($this->password) {
-      $this->out= new CipheringZipFileOutputStream($this, $entry, $name, new ZipCipher($this->password));
-    } else {
-      $this->out= new ZipFileOutputStream($this, $entry, $name);
-    }
-    
-    $entry->os= $this->out;
-    return $entry;
+    $this->out= $entry->os= new ZipFileOutputStream($this, $entry, $name);
+    return $entry->useEncryption($this->encryption, false);
   }
 
   /**
@@ -186,56 +182,42 @@ class ZipArchiveWriter implements Closeable {
   }
 
   /**
-   * Writes to a stream
-   *
-   * @param   string arg
-   */
-  public function streamWrite($arg) {
-    $this->stream->write($arg);
-  }
-  
-  /**
    * Write a file entry
    *
-   * @param   io.archive.zip.ZipFile file
-   * @param   string name
-   * @param   int size
-   * @param   int compressed
-   * @param   int crc32
-   * @param   int flags
+   * @param  int $flags
+   * @param  int $compressiom
+   * @param  int $modified
+   * @param  int $crc32
+   * @param  int $compressed
+   * @param  int $size
+   * @param  string $name
+   * @param  string $extra
+   * @return void
    */
-  public function writeFile($file, $name, $size, $compressed, $crc32, $flags) {
-    $mod= $file->getLastModified();
+  public function addEntry($flags, $compression, $modified, $crc32, $compressed, $size, $name, $extra) {
     $nameLength= strlen($name);
-    $method= $file->getCompression()->ordinal();
-    $extraLength= 0;
-    $extra= '';
+    $extraLength= strlen($extra);
 
     $info= pack(
       'vvvvvVVVvv',
-      10,                       // version
-      $this->unicode ? 2048 : $flags,
-      $method,                  // compression method, 0 = none, 8 = gz, 12 = bz
-      $this->dosTime($mod),     // last modified dostime
-      $this->dosDate($mod),     // last modified dosdate
-      $crc32,                   // CRC32 checksum
-      $compressed,              // compressed size
-      $size,                    // uncompressed size
-      $nameLength,              // filename length
-      $extraLength              // extra field length
+      10,                        // version
+      $this->unicode ? 2048 | $flags : $flags,
+      $compression,              // compression algorithm
+      $this->dosTime($modified), // last modified dostime
+      $this->dosDate($modified), // last modified dosdate
+      $crc32,                    // CRC32 checksum
+      $compressed,               // compressed size
+      $size,                     // uncompressed size
+      $nameLength,               // filename length
+      $extraLength               // extra field length
     );
 
     $this->stream->write(self::FHDR.$info);
-    $this->stream->write($name);
+    $nameLength && $this->stream->write($name);
     $extraLength && $this->stream->write($extra);
 
     $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x20];
-    $this->pointer+= (
-      strlen(self::FHDR) + 
-      strlen($info) + 
-      $nameLength + 
-      $compressed
-    );
+    $this->pointer+= strlen(self::FHDR) + strlen($info) + $nameLength + $extraLength + $compressed;
   }
 
   /**
@@ -256,7 +238,7 @@ class ZipArchiveWriter implements Closeable {
       $s= (
         self::DHDR.
         "\x14\x0b".           // version made by
-        $entry['info'].       // { see writeFile() }
+        $entry['info'].       // see addEntry()
         "\x00\x00".           // file comment length
         "\x00\x00".           // disk number start
         "\x01\x00".           // internal file attributes

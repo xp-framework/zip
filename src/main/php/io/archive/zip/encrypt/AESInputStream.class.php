@@ -1,10 +1,10 @@
-<?php namespace io\archive\zip;
+<?php namespace io\archive\zip\encrypt;
 
 use io\streams\InputStream;
 use lang\IllegalStateException;
 
 /**
- * Deciphers using little-endian variant of AES-CTR
+ * Decrypts using little-endian variant of AES-CTR
  *
  * @ext   openssl
  */
