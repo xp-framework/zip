@@ -2,6 +2,7 @@
 
 use io\archive\zip\encrypt\{AESEncryption, Cipher};
 
+/** Encryption methods */
 abstract class Encryption {
 
   /**
@@ -17,7 +18,7 @@ abstract class Encryption {
   }
 
   /**
-   * Returns traditional ZIP cipher
+   * Returns traditional PKZIP cipher
    *
    * @param  string|util.Secret $password
    * @return self
