@@ -31,7 +31,7 @@ class ZipArchiveWriter implements Closeable {
    * @param  bool $unicode whether to use unicode for entry names
    */
   public function __construct(OutputStream $stream, $unicode= false) {
-    $this->stream= $stream;
+    $this->stream= new RemainsOpen($stream);
     $this->unicode= $unicode;
   }
   
@@ -261,7 +261,7 @@ class ZipArchiveWriter implements Closeable {
       strlen($comment)
     ));
     $this->stream->write($comment);
-    $this->stream->close();
+    $this->stream->close(true);
     $this->dir= null;
   }
   
