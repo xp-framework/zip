@@ -112,7 +112,7 @@ class ZipArchiveWriter implements Closeable {
     );
     $this->stream->write(self::FHDR.$info.$name);
     
-    $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x10];
+    $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x10, 'extra' => ''];
     $this->pointer+= strlen(self::FHDR) + strlen($info) + $nameLength;
 
     return $entry;
@@ -216,7 +216,7 @@ class ZipArchiveWriter implements Closeable {
     $nameLength && $this->stream->write($name);
     $extraLength && $this->stream->write($extra);
 
-    $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x20];
+    $this->dir[$name]= ['info' => $info, 'pointer' => $this->pointer, 'type' => 0x20, 'extra' => $extra];
     $this->pointer+= strlen(self::FHDR) + strlen($info) + $nameLength + $extraLength + $compressed;
   }
 
@@ -244,7 +244,8 @@ class ZipArchiveWriter implements Closeable {
         "\x01\x00".           // internal file attributes
         pack('V', $entry['type']).
         pack('V', $entry['pointer']).
-        $name
+        $name.
+        $entry['extra']
       );
       $l+= strlen($s);
       $this->stream->write($s);
