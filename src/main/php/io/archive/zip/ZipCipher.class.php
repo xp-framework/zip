@@ -61,22 +61,7 @@ class ZipCipher {
   ];
   
   /**
-   * Constructor.
-   *
-   * @param  io.archive.zip.ZipCipher $copy if passed, creates this as a copy
-   */
-  public function __construct($copy= null) {
-    if (null === $copy) {
-      $this->keys= [new BigInt(0x12345678), new BigInt(0x23456789), new BigInt(0x34567890)];
-    } else {
-      foreach ($copy->keys as $key) {
-        $this->keys[]= clone $key;
-      }
-    }
-  }
-  
-  /**
-   * Initialize this cipher. From the original spec:
+   * Initialize this cipher from a given passphrase. From the original spec:
    *
    * ```
    * Step 1 - Initializing the encryption keys
@@ -93,9 +78,12 @@ class ZipCipher {
    * end loop
    * ```
    *
-   * @param   string $passphrase
+   * @param  ?string $passphrase
    */
-  public function initialize($passphrase) {
+  public function __construct($passphrase= null) {
+    $this->keys= [new BigInt(0x12345678), new BigInt(0x23456789), new BigInt(0x34567890)];
+    if (null === $passphrase) return;
+
     for ($i= 0, $s= strlen($passphrase); $i < $s; $i++) {
       $this->updateKeys(ord($passphrase[$i]));
     }

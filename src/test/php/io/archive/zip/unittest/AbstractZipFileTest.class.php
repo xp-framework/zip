@@ -1,24 +1,28 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\File;
-use io\archive\zip\{ZipArchiveReader, ZipEntry};
+use io\archive\zip\{ZipArchiveReader, ZipEntry, Compression, Encryption};
 use io\streams\{Streams, InputStream};
-use test\verify\Runtime;
 use util\Secret;
 
-/**
- * Base class for testing zip files
- *
- * @see   net.xp_framework.unittest.io.archive.MalformedZipFileTest
- * @see   net.xp_framework.unittest.io.archive.vendors.ZipFileVendorTest
- */
-#[Runtime(extensions: ['zlib'])]
 abstract class AbstractZipFileTest {
+  const SECRET= 'secret';
 
   /** @return iterable */
-  protected function passwords() {
-    yield ['secret'];
-    yield [new Secret('secret')];
+  protected function encryption() {
+    yield [self::SECRET];
+    yield [new Secret(self::SECRET)];
+    yield [Encryption::cipher(new Secret(self::SECRET))];
+    yield [Encryption::aes(new Secret(self::SECRET), 128)];
+    yield [Encryption::aes(new Secret(self::SECRET), 192)];
+    yield [Encryption::aes(new Secret(self::SECRET), 256)];
+  }
+
+  /** @return iterable */
+  protected function compression() {
+    yield [Compression::$NONE];
+    extension_loaded('zlib') && yield [Compression::$GZ];
+    extension_loaded('bz2') && yield [Compression::$BZ];
   }
 
   /**

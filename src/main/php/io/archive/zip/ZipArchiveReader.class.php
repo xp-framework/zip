@@ -48,8 +48,20 @@ class ZipArchiveReader implements Closeable {
   }
 
   /**
+   * Sets password for decryption.
+   *
+   * @param  string|util.Secret $password
+   * @return self
+   */
+  public function decryptWith($password) {
+    $this->impl->setPassword($password);
+    return $this;
+  }
+
+  /**
    * Set password to use when extracting 
    *
+   * @deprecated Use decryptWith() instead!
    * @param  string $password
    * @return self
    */

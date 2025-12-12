@@ -29,7 +29,7 @@ class XpZipFileTest extends ZipFileVendorTest {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSecuredEntriesIn($reader) {
-    with ($it= $reader->usingPassword('secret')->iterator()); {
+    with ($it= $reader->decryptWith('secret')->iterator()); {
       $entry= $it->next();
       Assert::equals('password.txt', $entry->getName());
       Assert::equals(15, $entry->getSize());
