@@ -249,7 +249,7 @@ class ZipArchiveWriter implements Closeable {
       $l+= strlen($s);
       $this->stream->write($s);
     }
-    
+
     // End of central directory
     $this->stream->write(self::EOCD);
     $this->stream->write(pack(

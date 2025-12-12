@@ -76,6 +76,10 @@ class ZipFileOutputStream implements OutputStream {
         $this->name
       );
       $out= $encryption->out($this->writer, $crc32);
+      while ($this->data->available()) {
+        $out->write($this->data->read());
+      }
+      $out->close();
     } else {
       $this->writer->addEntry(
         0,
@@ -87,13 +91,12 @@ class ZipFileOutputStream implements OutputStream {
         $this->name,
         ''
       );
-      $out= $this->writer->stream;
+      while ($this->data->available()) {
+        $this->writer->stream->write($this->data->read());
+      }
+      // Leave underlying stream open
     }
 
-    while ($this->data->available()) {
-      $out->write($this->data->read());
-    }
-    $out->close();
     $this->data= null;
   }
 }

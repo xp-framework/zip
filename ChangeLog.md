@@ -3,6 +3,11 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.3.0 / 2025-12-12
+
+* Merged PR #7: Refactor encryption, adding AES-128, -192 and -256 write
+  support
+  (@thekid)
 * Merged PR #6: Support listing entries (with encrypted content) without
   password by deferring verification until content stream is accessed
   (@thekid)
