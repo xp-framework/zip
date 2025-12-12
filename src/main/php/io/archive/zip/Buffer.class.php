@@ -2,7 +2,7 @@
 
 use io\streams\{InputStream, OutputStream};
 
-// TODO: Buffer to disk!
+/** @test io.archive.zip.unittest.BufferTest */
 class Buffer implements InputStream, OutputStream {
   public $length= 0;
   private $position= 0;
@@ -33,6 +33,8 @@ class Buffer implements InputStream, OutputStream {
    */
   public function write($bytes) {
     $this->length+= strlen($bytes);
+
+    // TODO: Buffer to disk!
     $this->bytes.= $bytes;
   }
 
