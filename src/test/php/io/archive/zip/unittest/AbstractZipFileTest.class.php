@@ -50,7 +50,7 @@ abstract class AbstractZipFileTest {
    */
   protected function sequentialAccess($package, $name) {
     $resource= typeof($this)->getPackage()->getPackage($package)->getResourceAsStream($name.'.zip');
-    return new class($resource) extends InputStream {
+    return new class($resource) implements InputStream {
       protected $file;
 
       public function __construct($file) {
