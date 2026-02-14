@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.3.1 / 2026-02-14
+
 * Added PHP 8.6 to the test matrix - @thekid
 * Fixed isssue #8: Undefined function `raise()` - @thekid
 
