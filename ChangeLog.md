@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed isssue #8: Undefined function `raise()` - @thekid
+
 ## 11.3.0 / 2025-12-12
 
 * Merged PR #7: Refactor encryption, adding AES-128, -192 and -256 write

@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip;
 
 use io\streams\InputStream;
-use lang\{FormatException, IllegalArgumentException, IllegalAccessException};
+use lang\{FormatException, IllegalArgumentException, IllegalAccessException, MethodNotImplementedException};
 use util\{Date, Secret};
 
 /**
@@ -263,6 +263,9 @@ abstract class AbstractZipReaderImpl {
    * @return  void
    */
   protected function readCentralDirectory() {
-    raise('lang.MethodNotImplementedException', 'Seeking central directory is only supported by RandomAccessZipReaderImpl.');
+    throw new MethodNotImplementedException(
+      'Seeking central directory is only supported by RandomAccessZipReaderImpl',
+      __FUNCTION__
+    );
   }
 }
