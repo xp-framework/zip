@@ -50,13 +50,25 @@ abstract class AbstractZipFileTest {
    */
   protected function sequentialAccess($package, $name) {
     $resource= typeof($this)->getPackage()->getPackage($package)->getResourceAsStream($name.'.zip');
-    return newinstance(InputStream::class, [$resource], [
-      'file' => null,
-      '__construct' => function($file) { $this->file= $file->open(File::READ); },
-      'read'        => function($limit= 8192) { return $this->file->read($limit); },
-      'available'   => function() { return $this->file->eof() ? 0 : 1; },
-      'close'       => function() { $this->file->close(); },
-    ]);
+    return new class($resource) extends InputStream {
+      protected $file;
+
+      public function __construct($file) {
+        $this->file= $file->open(File::READ);
+      }
+
+      public function read($limit= 8192) {
+        return $this->file->read($limit);
+      }
+
+      public function available() {
+        return $this->file->eof() ? 0 : 1;
+      }
+
+      public function close() {
+        $this->file->close();
+      }
+    };
   }
 
   /**
