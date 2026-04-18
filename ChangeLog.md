@@ -3,6 +3,8 @@ ZIP File support for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.3.2 / 2026-04-18
+
 * Fixed issue #11: Storing input streams - @thekid
 
 ## 11.3.1 / 2026-02-14
