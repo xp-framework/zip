@@ -1,7 +1,7 @@
 <?php namespace io\archive\zip\unittest;
 
 use io\archive\zip\ZipArchiveReader;
-use io\streams\InputStream;
+use io\streams\{InputStream, Streams};
 use lang\IllegalStateException;
 use test\{Assert, Test};
 
@@ -74,5 +74,17 @@ abstract class ZipFileContentsTest extends AbstractZipFileTest {
     Assert::throws(IllegalStateException::class, function() use($entry) {
       $this->entryContent($entry);
     });
+  }
+
+  #[Test]
+  public function stream_content_after_iteration() {
+    $reader= new ZipArchiveReader($this->randomAccess('fixtures', 'twofiles'));
+    $streams= [];
+    foreach ($reader->entries() as $entry) {
+      $streams[]= $entry->in();
+    }
+
+    Assert::equals('Eins', Streams::readAll($streams[0]));
+    Assert::equals('Zwei', Streams::readAll($streams[1]));
   }
 }

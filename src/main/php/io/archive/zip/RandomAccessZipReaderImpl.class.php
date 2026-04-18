@@ -54,20 +54,20 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
     $entries= $this->seekCentralDirectory();
 
     // File pointer is positioned at start of the central directory
-    while (self::EOCD !== ($sig= (string)$this->streamRead(4))) {
+    while (self::EOCD !== ($sig= (string)$this->streamRead(4, $this->position))) {
       if (self::DHDR != $sig) 
         throw new FormatException('No central directory header signature found, have: '.addcslashes($sig, "\0..\17"));
 
       $header= unpack(
         'vmade/vversion/vflags/vcompression/vtime/vdate/Vcrc/Vcompressed/Vuncompressed/vnamelen/vextralen/vcommentlen/vdiskno/vattr/Vextattr/Voffset', 
-        $this->streamRead(42)
+        $this->streamRead(42, $this->position)
       );
       
-      $filename= (string)$this->streamRead($header['namelen']);
-      $extra= (string)$this->streamRead($header['extralen']);
-      $comment= (string)$this->streamRead($header['commentlen']);
+      $filename= (string)$this->streamRead($header['namelen'], $this->position);
+      $extra= (string)$this->streamRead($header['extralen'], $this->position);
+      $comment= (string)$this->streamRead($header['commentlen'], $this->position);
 
-      $this->addToIndex($filename, $header);
+      $this->index[$filename]= $header;
     }
   }
 
@@ -82,30 +82,30 @@ class RandomAccessZipReaderImpl extends AbstractZipReaderImpl {
     // Seek to start of file, so we can determine filesize
     $this->streamPosition(0);
     $fileSize= $this->streamAvailable();
-    
+
     // Seek to "first" position where EOCD can occur (Note: a file
     // comment may be embedded in the EOCD header - with variable size;
     // this code currently does not support this and just assumes the
     // comment has 0 byte length.)
-    $offset= $fileSize- 22;
+    $offset= $fileSize - 22;
     if ($offset < 0) throw new FormatException('File too short for a .zip');
     $this->streamPosition($offset);
-    
+
     // By reading one byte at a time, try to find the magic marker sequence
     // which indicates the start of the EOCD section
-    $marker= (string)$this->streamRead(3);
+    $marker= (string)$this->streamRead(3, $this->position);
     while ($this->streamAvailable()) {
-      $marker.= (string)$this->streamRead(1);
-      if ($marker == parent::EOCD) break;
+      $marker.= (string)$this->streamRead(1, $this->position);
+      if ($marker === parent::EOCD) break;
       $marker= substr($marker, -3);
     }
-    
+
     if (0 === $this->streamAvailable()) {
       throw new FormatException('Could not find central directory; currently not supporting archives w/ file comments.');
     }
 
     // Read offset of central directory from end-of-central-directory "header"
-    $offset= unpack('vdisk/vstart/vtotal/ventries/Vsize/Voffset', $this->streamRead(16));
+    $offset= unpack('vdisk/vstart/vtotal/ventries/Vsize/Voffset', $this->streamRead(16, $this->position));
     $this->streamPosition($offset['offset']);
   }
 }

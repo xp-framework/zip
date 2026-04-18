@@ -49,7 +49,7 @@ class ZipFileInputStream implements InputStream, Seekable {
    * @return string
    */
   public function read($limit= 8192) {
-    $chunk= $this->reader->streamRead(min($limit, $this->length - $this->pos));
+    $chunk= $this->reader->streamRead(min($limit, $this->length - $this->pos), $this->start + $this->pos);
     $l= strlen($chunk);
     $this->pos+= $l;
     $this->reader->skip-= $l;

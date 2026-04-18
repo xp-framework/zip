@@ -76,15 +76,23 @@ abstract class AbstractZipReaderImpl {
    * Reads from a stream
    *
    * @param   int length
+   * @param   int offset
    * @return  string
    */
-  public function streamRead($length) {
+  public function streamRead($length, int $offset) {
     if (0 === $length) return '';
+
+    if ($offset !== $this->position) {
+      $this->streamSeek($offset, SEEK_SET);
+      $this->position= $offset;
+    }
+
     $chunk= '';
     while (strlen($chunk) < $length) {
-      if (0 == strlen($buf= $this->stream->read($length - strlen($chunk)))) break;
+      if (0 === strlen($buf= $this->stream->read($length - strlen($chunk)))) break;
       $chunk.= $buf;
     }
+
     $this->position+= strlen($chunk);
     return $chunk;
   }
@@ -159,19 +167,19 @@ abstract class AbstractZipReaderImpl {
    * @throws  lang.IllegalArgumentException on password mismatch
    */
   public function currentEntry() {
-    $type= $this->streamRead(4);
+    $type= $this->streamRead(4, $this->position);
     switch ($type) {
       case self::FHDR: {      // Entry
         $header= unpack(
           'vversion/vflags/vcompression/vtime/vdate/Vcrc/Vcompressed/Vuncompressed/vnamelen/vextralen', 
-          $this->streamRead(26)
+          $this->streamRead(26, $this->position)
         );
         if (0 === $header['namelen']) {
         
           // Prevent 0-length read.
           $decoded= '';
         } else {
-          $name= (string)$this->streamRead($header['namelen']);
+          $name= (string)$this->streamRead($header['namelen'], $this->position);
           
           // Decode name from zipfile. If we find general purpose flag bit 11 
           // (EFS), the name is encoded in UTF-8, if not, we try the following: 
@@ -183,7 +191,7 @@ abstract class AbstractZipReaderImpl {
             : ['utf-8' => \xp::ENCODING, 'cp437' => 'iso-8859-1', 'cp1252' => \xp::ENCODING]
           );
         }
-        $extra= $this->streamRead($header['extralen']);
+        $extra= $this->streamRead($header['extralen'], $this->position);
         $date= $this->dateFromDosDateTime($header['date'], $header['time']);
         $this->skip= $header['compressed'];
 
@@ -250,10 +258,6 @@ abstract class AbstractZipReaderImpl {
       }
     }
     throw new FormatException('Unknown byte sequence '.addcslashes($type, "\0..\17"));
-  }
-  
-  protected function addToIndex($filename, $header) {
-    $this->index[$filename]= $header;
   }
   
   /**

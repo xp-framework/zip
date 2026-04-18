@@ -26,7 +26,7 @@ class SequentialZipReaderImpl extends AbstractZipReaderImpl {
    * @return  io.archive.zip.ZipEntry
    */
   public function nextEntry() {
-    $this->skip && $this->streamRead($this->skip);
+    $this->skip && $this->streamRead($this->skip, $this->position);
     return $this->currentEntry();
   }
 
