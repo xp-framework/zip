@@ -4,12 +4,12 @@ use io\streams\InputStream;
 use lang\{FormatException, IllegalArgumentException, IllegalAccessException, MethodNotImplementedException};
 use util\{Date, Secret};
 
-/**
- * Abstract base class for zip reader implementations
- *
- * @ext   iconv
- */
+/** Abstract base class for zip reader implementations */
 abstract class AbstractZipReaderImpl {
+  const EOCD= "\x50\x4b\x05\x06";  // End-Of-Central-Directory
+  const FHDR= "\x50\x4b\x03\x04";  // File header
+  const DHDR= "\x50\x4b\x01\x02";  // Zip central directory
+
   public $skip= 0;
 
   protected $stream= null;
@@ -17,15 +17,10 @@ abstract class AbstractZipReaderImpl {
   protected $password= null;
   protected $position= 0;
 
-  // Signatures
-  const EOCD = "\x50\x4b\x05\x06";  // End-Of-Central-Directory
-  const FHDR = "\x50\x4b\x03\x04";  // File header
-  const DHDR = "\x50\x4b\x01\x02";  // Zip central directory
-
   /**
    * Creation constructor
    *
-   * @param   io.streams.InputStream stream
+   * @param  io.streams.InputStream $stream
    */
   public function __construct(InputStream $stream) {
     $this->stream= $stream;
@@ -47,26 +42,26 @@ abstract class AbstractZipReaderImpl {
   /**
    * Creates a date from DOS date and time
    *
-   * @see     http://www.vsft.com/hal/dostime.htm
-   * @param   int date
-   * @param   int time
-   * @return  util.Date
+   * @see    http://www.vsft.com/hal/dostime.htm
+   * @param  int $date
+   * @param  int $time
+   * @return util.Date
    */
   protected function dateFromDosDateTime($date, $time) {
     return Date::create(
-      (($date >> 9) & 0x7F) + 1980,
-      (($date >> 5) & 0x0F),
-      $date & 0x1F,
-      ($time >> 11) & 0x1F,
-      ($time >> 5) & 0x3F,
-      ($time << 1) & 0x1E
+      (($date >> 9) & 0x7f) + 1980,
+      (($date >> 5) & 0x0f),
+      $date & 0x1f,
+      ($time >> 11) & 0x1f,
+      ($time >> 5) & 0x3f,
+      ($time << 1) & 0x1e
     );
   }
   
   /**
    * Returns how many bytes can be read from the stream
    *
-   * @return  int
+   * @return int
    */
   public function streamAvailable() {
     return $this->stream->available();
@@ -75,9 +70,9 @@ abstract class AbstractZipReaderImpl {
   /**
    * Reads from a stream
    *
-   * @param   int length
-   * @param   int offset
-   * @return  string
+   * @param  int $length
+   * @param  int $offset
+   * @return string
    */
   public function streamRead($length, int $offset) {
     if (0 === $length) return '';
@@ -98,9 +93,10 @@ abstract class AbstractZipReaderImpl {
   }
 
   /**
-   * Sets stream position 
+   * Sets stream position to a given offset
    *
-   * @param   int offset absolute offset
+   * @param  int $offset
+   * @return void
    */
   public function streamPosition($offset) {
     if ($offset !== $this->position) {
@@ -121,31 +117,31 @@ abstract class AbstractZipReaderImpl {
   /**
    * Seeks a stream
    *
-   * @param   int offset absolute offset
-   * @param   int whence
+   * @param  int $offset
+   * @param  int $whence
    */
   protected abstract function streamSeek($offset, $whence);
 
   /**
    * Get first entry
    *
-   * @return  io.archive.zip.ZipEntry
+   * @return io.archive.zip.ZipEntry
    */
   public abstract function firstEntry();
   
   /**
    * Get next entry
    *
-   * @return  io.archive.zip.ZipEntry
+   * @return io.archive.zip.ZipEntry
    */
   public abstract function nextEntry();
   
   /**
    * Decode a name from a list of given character sets
    *
-   * @param   string name
-   * @param   string[] charsets
-   * @return  string
+   * @param  string $name
+   * @param  string[] $charsets
+   * @return string
    */
   protected function decodeName($name, $charsets) {
     \xp::gc(__FILE__);
@@ -162,9 +158,9 @@ abstract class AbstractZipReaderImpl {
   /**
    * Gets current entry
    *
-   * @return  io.archive.zip.ZipEntry
-   * @throws  lang.FormatException
-   * @throws  lang.IllegalArgumentException on password mismatch
+   * @return io.archive.zip.ZipEntry
+   * @throws lang.FormatException
+   * @throws lang.IllegalArgumentException on password mismatch
    */
   public function currentEntry() {
     $type= $this->streamRead(4, $this->position);
@@ -264,7 +260,7 @@ abstract class AbstractZipReaderImpl {
    * Read central directory; not supported in this abstract
    * implementation.
    *
-   * @return  void
+   * @return void
    */
   protected function readCentralDirectory() {
     throw new MethodNotImplementedException(
